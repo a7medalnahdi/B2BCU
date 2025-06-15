@@ -246,6 +246,64 @@
         .slider .moon-icon { right: 8px; opacity: 0; }
         input:checked + .slider .sun-icon { opacity: 0; }
         input:checked + .slider .moon-icon { opacity: 1; color: white; }
+
+        /* === CSS FOR SAVED TEMPLATES === */
+        .saved-template-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .delete-template-btn {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .saved-template-wrapper:hover .delete-template-btn {
+            opacity: 1;
+        }
+        .saved-templates-section {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+        }
+        .saved-templates-section .control-group {
+            margin-bottom: 0;
+        }
+        .saved-templates-section .template-thumb {
+            border-width: 3px;
+            border-color: var(--tertiary-color);
+        }
+        .dark-mode .saved-templates-section .template-thumb {
+             border-color: #4a5568;
+        }
+        .template-name-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+        }
+        /* === END OF CSS === */
     </style>
 </head>
 <body>
@@ -354,7 +412,19 @@
                              <button class="btn" id="downloadPdfBtn" style="background-color: var(--danger-color); flex: 1;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
                         </div>
                      </div>
-                </div>
+                     <div class="tool-group">
+                        <label>حفظ التصميم الحالي</label>
+                        <button class="btn" id="saveTemplateBtn" style="background-color: #3b82f6;"><i class="fa-solid fa-save"></i> حفظ كقالب جديد</button>
+                    </div>
+                    <div class="saved-templates-section">
+                        <div class="control-group">
+                            <label>قوالبي المحفوظة</label>
+                            <div id="saved-templates-container" class="templates-grid-container">
+                                <p id="no-saved-templates" style="color: var(--tertiary-color); font-size: 0.9rem; grid-column: 1 / -1;">لا توجد قوالب محفوظة بعد.</p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
 
                 <div id="batch-producer-panel" style="display: none;">
                     <div class="section-title">إنتاج مجموعة كوبونات</div>
@@ -430,7 +500,9 @@
             batchFileUpload: document.getElementById('batchFileUpload'),
             fileName: document.getElementById('fileName'),
             generatePdfBtn: document.getElementById('generatePdfBtn'),
-            selectableElements: document.querySelectorAll('.selectable')
+            selectableElements: document.querySelectorAll('.selectable'),
+            saveTemplateBtn: document.getElementById('saveTemplateBtn'),
+            savedTemplatesContainer: document.getElementById('saved-templates-container')
         };
         
         let activeElement = null;
@@ -704,8 +776,142 @@
                 codeTextElement.textContent = originalCode;
             });
         });
+
+        // === SAVED TEMPLATES LOGIC (UPDATED) ===
+
+        function saveCurrentTemplate() {
+            const name = prompt("يرجى إدخال اسم للقالب:", "قالب مخصص");
+            if (!name || name.trim() === "") {
+                showNotification('warning', 'تم الإلغاء', 'لم يتم إدخال اسم صالح للقالب.');
+                return;
+            }
+
+            const templateData = {
+                id: `saved-${Date.now()}`,
+                name: name.trim(),
+                texts: {},
+                logo: {},
+                background: elements.backgroundImage.src,
+                orientation: elements.previewArea.classList.contains('portrait') ? 'portrait' : 'landscape'
+            };
+
+            document.querySelectorAll('.overlay-text').forEach(el => {
+                const style = window.getComputedStyle(el);
+                templateData.texts[el.id] = {
+                    content: el.innerHTML,
+                    top: el.style.top,
+                    left: el.style.left,
+                    transform: el.style.transform,
+                    fontSize: style.fontSize,
+                    color: style.color,
+                    fontWeight: style.fontWeight
+                };
+            });
+
+            const logo = document.getElementById('logoPreview');
+            if (logo && logo.src && logo.style.display !== 'none') {
+                templateData.logo = {
+                    src: logo.src,
+                    top: logo.style.top,
+                    left: logo.style.left,
+                    width: logo.style.width
+                };
+            }
+
+            const savedTemplates = JSON.parse(localStorage.getItem('myCouponTemplates')) || [];
+            savedTemplates.push(templateData);
+            localStorage.setItem('myCouponTemplates', JSON.stringify(savedTemplates));
+
+            loadSavedTemplates();
+            showNotification('success', 'تم الحفظ', `تم حفظ قالب "${templateData.name}" بنجاح.`);
+        }
+
+        function applyTemplateData(templateData) {
+            setOrientation(templateData.orientation); 
+
+            elements.backgroundImage.src = templateData.background;
+            document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active'));
+
+            Object.keys(templateData.texts).forEach(id => {
+                const el = document.getElementById(id);
+                const data = templateData.texts[id];
+                if (el) {
+                    el.innerHTML = data.content;
+                    el.style.top = data.top;
+                    el.style.left = data.left;
+                    el.style.transform = data.transform;
+                    el.style.fontSize = data.fontSize;
+                    el.style.color = data.color;
+                    el.style.fontWeight = data.fontWeight;
+                }
+            });
+
+            const logo = document.getElementById('logoPreview');
+            if (templateData.logo && templateData.logo.src) {
+                logo.src = templateData.logo.src;
+                logo.style.display = 'block';
+                logo.style.top = templateData.logo.top;
+                logo.style.left = templateData.logo.left;
+                logo.style.width = templateData.logo.width;
+            } else {
+                logo.src = '';
+                logo.style.display = 'none';
+            }
+            showNotification('success', 'تم التطبيق', `تم تطبيق قالب "${templateData.name}" بنجاح.`);
+        }
+
+        function deleteTemplate(templateId) {
+            let savedTemplates = JSON.parse(localStorage.getItem('myCouponTemplates')) || [];
+            savedTemplates = savedTemplates.filter(t => t.id !== templateId);
+            localStorage.setItem('myCouponTemplates', JSON.stringify(savedTemplates));
+            loadSavedTemplates();
+        }
+
+        function loadSavedTemplates() {
+            const savedTemplates = JSON.parse(localStorage.getItem('myCouponTemplates')) || [];
+            elements.savedTemplatesContainer.innerHTML = '';
+
+            if (savedTemplates.length === 0) {
+                elements.savedTemplatesContainer.innerHTML = '<p style="color: var(--tertiary-color); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">لا توجد قوالب محفوظة بعد.</p>';
+                return;
+            }
+            
+            savedTemplates.forEach(template => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'saved-template-wrapper';
+
+                const thumb = document.createElement('img');
+                thumb.src = template.background;
+                thumb.classList.add('template-thumb');
+                thumb.style.aspectRatio = template.orientation === 'portrait' ? '1.05 / 1.48' : '1.48 / 1.05';
+                thumb.title = `تطبيق قالب: ${template.name}`;
+                thumb.addEventListener('click', () => applyTemplateData(template));
+
+                const nameLabel = document.createElement('p');
+                nameLabel.textContent = template.name;
+                nameLabel.className = 'template-name-label';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
+                deleteBtn.className = 'delete-template-btn';
+                deleteBtn.title = 'حذف هذا القالب';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm(`هل أنت متأكد من رغبتك في حذف قالب "${template.name}"؟`)) {
+                        deleteTemplate(template.id);
+                    }
+                });
+
+                wrapper.appendChild(deleteBtn);
+                wrapper.appendChild(thumb);
+                wrapper.appendChild(nameLabel);
+                elements.savedTemplatesContainer.appendChild(wrapper);
+            });
+        }
+
+        elements.saveTemplateBtn.addEventListener('click', saveCurrentTemplate);
         
-        // --- Movable Items (FINAL FIX - REBUILT) ---
+        // --- Movable Items ---
         document.querySelectorAll('.movable-item').forEach(element => {
             let isDragging = false;
             let startPosX, startPosY, startElemX, startElemY;
@@ -766,6 +972,7 @@
 
         // --- Initialise App ---
         renderTemplates();
+        loadSavedTemplates(); // Load user's saved templates on startup
         setOrientation('landscape');
         showPropertiesFor(null);
     });
