@@ -804,7 +804,7 @@ AC NO : 26100000261004</pre>
 
                         <div class="notes-section">
                             <p class="section-heading">NOTES</p>
-                            <ul id="previewNotes" contenteditable="true" data-field="notesText" data-list-type="true" data-placeholder="ملاحظات (كل ملاحظة بسطر)...">
+                            <ul id="previewNotes">
                                 <li>Quotation for 6 Cars</li>
                                 <li>Wash 3 times per week</li>
                                 <li>Total wash 72 per month</li>
@@ -835,6 +835,11 @@ AC NO : 26100000261004</pre>
                 <div class="control-group">
                     <label for="vatRateInput">VAT Rate (%):</label>
                     <input type="number" id="vatRateInput" value="15" min="0" max="100" step="1">
+                </div>
+
+                <div class="control-group">
+                    <label for="notesInput">Notes (كل ملاحظة بسطر جديد):</label>
+                    <textarea id="notesInput" rows="6" placeholder="أدخل الملاحظات هنا، كل ملاحظة على سطر جديد..."></textarea>
                 </div>
                 <div class="tool-group">
                     <button class="btn" id="exportQuotationPdf" style="background-color: var(--success-color);"><i class="fa-solid fa-file-pdf"></i> تصدير PDF</button>
@@ -891,7 +896,8 @@ AC NO : 26100000261004</pre>
                 previewBillFrom: document.getElementById('previewBillFrom'),
                 previewTo: document.getElementById('previewTo'),
                 previewBankDetails: document.getElementById('previewBankDetails'),
-                previewNotes: document.getElementById('previewNotes'),
+                previewNotes: document.getElementById('previewNotes'), // This is now just for display
+                notesInput: document.getElementById('notesInput'), // NEW: Textarea for notes input
                 footerPhone: document.querySelector('[data-field="phone"]'),
                 footerEmail: document.querySelector('[data-field="email"]'),
                 footerAddress: document.querySelector('[data-field="address"]'),
@@ -1009,6 +1015,25 @@ AC NO : 26100000261004</pre>
                 return div.textContent || div.innerText || '';
             }
 
+            // --- Update Notes display from textarea ---
+            function updateNotesDisplay() {
+                const notesText = elements.notesInput.value;
+                elements.previewNotes.innerHTML = ''; // Clear existing notes
+                const lines = notesText.split('\n').filter(line => line.trim() !== ''); // Split by newlines and filter empty
+                
+                if (lines.length > 0) {
+                    lines.forEach(line => {
+                        const li = document.createElement('li');
+                        li.textContent = line.trim();
+                        elements.previewNotes.appendChild(li);
+                    });
+                } else {
+                    // Optional: If you want a placeholder to show when textarea is empty
+                    // you'd need to manage it with CSS :empty:before on the UL
+                    // or dynamically add a placeholder li. For now, it will just be empty.
+                }
+            }
+
             // --- Attach event listeners for direct editing ---
             function setupEditableElements(elementsToSetup) {
                 elementsToSetup.forEach(element => {
@@ -1020,12 +1045,8 @@ AC NO : 26100000261004</pre>
                                 this.textContent = this.textContent.replace(currencyImg.parentElement.outerHTML, '').trim();
                             }
                             this.textContent = this.textContent.replace(/[^0-9.]/g, ''); 
-                        } else if (this.dataset.listType === 'true') {
-                            // For list types, convert current <li>s back to plain text with breaks
-                            // Ensure each <li> content is sanitized and joined with a newline
-                            let textContent = Array.from(this.querySelectorAll('li')).map(li => sanitizeHtml(li.innerHTML)).join('\n'); 
-                            this.textContent = textContent;
                         } else {
+                            // For all other contenteditable (non-number, non-list-type)
                             this.textContent = sanitizeHtml(this.innerHTML); 
                         }
                     });
@@ -1033,9 +1054,8 @@ AC NO : 26100000261004</pre>
                     element.addEventListener('blur', function() {
                         let newContent = this.innerHTML.trim();
                         
-                        if (this.dataset.listType !== 'true') {
-                            newContent = sanitizeHtml(newContent);
-                        }
+                        // Sanitize all contenteditable elements on blur, except if handling specifically differently (like notes, which is now textarea-driven)
+                        newContent = sanitizeHtml(newContent);
 
                         if (newContent === '' && this.dataset.placeholder) {
                             this.innerHTML = ''; 
@@ -1052,23 +1072,7 @@ AC NO : 26100000261004</pre>
                                     this.innerHTML = `${parseFloat(this.textContent).toFixed(2)} ${getCurrencySymbolHtml()}`;
                                 }
                             }
-                        } else if (this.dataset.listType === 'true') {
-                            // Split by newlines and filter out empty strings
-                            const lines = newContent.split(/[\n\r]+/) 
-                                                    .map(line => sanitizeHtml(line).trim()) 
-                                                    .filter(line => line !== '');
-                            this.innerHTML = ''; 
-                            if (lines.length > 0) {
-                                lines.forEach(line => {
-                                    const li = document.createElement('li');
-                                    li.textContent = line;
-                                    this.appendChild(li);
-                                });
-                            } else {
-                                this.innerHTML = ''; 
-                            }
-                        } 
-                        else {
+                        } else {
                             this.innerHTML = newContent;
                         }
 
@@ -1078,11 +1082,7 @@ AC NO : 26100000261004</pre>
                     });
 
                     element.addEventListener('keydown', function(e) {
-                        // Allow Enter key for list-type to create new lines
-                        if (e.key === 'Enter' && this.dataset.listType === 'true') {
-                            // Let the default browser behavior handle newline
-                            return true; 
-                        } else if (e.key === 'Enter') { // For other fields, Enter blurs
+                        if (e.key === 'Enter') { 
                             e.preventDefault(); 
                             this.blur(); 
                         }
@@ -1095,7 +1095,7 @@ AC NO : 26100000261004</pre>
             }
 
             // --- Add New Item Row ---
-            function addNewItemRow(description = 'Service', qty = 0, price = 0.00) { // Default values updated
+            function addNewItemRow(description = 'Service', qty = 0, price = 0.00) { 
                 const newRow = document.createElement('div');
                 newRow.classList.add('items-table-row');
                 newRow.innerHTML = `
@@ -1107,7 +1107,8 @@ AC NO : 26100000261004</pre>
                 `;
                 elements.itemsTableBody.appendChild(newRow);
 
-                setupEditableElements(newRow.querySelectorAll('[contenteditable="true"]'));
+                // Setup editable elements for the new row, excluding itemTotal as it's calculated
+                setupEditableElements(newRow.querySelectorAll('[contenteditable="true"]:not([data-field="itemTotal"])'));
                 
                 newRow.querySelector('.delete-item-btn').addEventListener('click', function() {
                     if (elements.itemsTableBody.children.length > 1) { 
@@ -1138,6 +1139,9 @@ AC NO : 26100000261004</pre>
             // --- VAT Rate Input Handler ---
             elements.vatRateInput.addEventListener('input', updateTotals);
 
+            // NEW: Notes Textarea input handler
+            elements.notesInput.addEventListener('input', updateNotesDisplay);
+
 
             // --- Save and Load Quotation Functions ---
             function getQuotationData() {
@@ -1159,7 +1163,7 @@ AC NO : 26100000261004</pre>
                     items: items,
                     vatRate: parseFloat(elements.vatRateInput.value) || 0,
                     bankDetailsText: elements.previewBankDetails.innerHTML, 
-                    notesText: Array.from(elements.previewNotes.querySelectorAll('li')).map(li => sanitizeHtml(li.innerHTML)).join('\n'), // Save notes as newline separated string
+                    notesText: elements.notesInput.value, // Now directly from textarea
                     phone: sanitizeHtml(elements.footerPhone.innerHTML),
                     email: sanitizeHtml(elements.footerEmail.innerHTML),
                     address: sanitizeHtml(elements.footerAddress.innerHTML),
@@ -1187,18 +1191,9 @@ AC NO : 26100000261004</pre>
                 
                 elements.previewBankDetails.innerHTML = data.bankDetailsText;
                 
-                // Set notes as list items
-                elements.previewNotes.innerHTML = '';
-                const notesLines = data.notesText.split('\n').filter(line => line.trim() !== '');
-                if (notesLines.length > 0) {
-                    notesLines.forEach(line => {
-                        const li = document.createElement('li');
-                        li.textContent = line.trim();
-                        elements.previewNotes.appendChild(li);
-                    });
-                } else {
-                    elements.previewNotes.innerHTML = ''; // Ensure placeholder shows if no notes
-                }
+                // Update notes textarea and then the display
+                elements.notesInput.value = data.notesText || ''; 
+                updateNotesDisplay(); // Update the UL from the textarea content
 
 
                 elements.footerPhone.innerHTML = data.phone;
@@ -1210,6 +1205,7 @@ AC NO : 26100000261004</pre>
                 document.querySelector('.header-company-logo img').src = COMPANY_LOGO_URL;
 
                 // Re-apply editable setup to all newly loaded/re-generated content
+                // IMPORTANT: Ensure elements.editableElements is re-queried if new contenteditable elements are added dynamically
                 setupEditableElements(document.querySelectorAll('[contenteditable="true"]'));
                 updateTotals();
             }
@@ -1413,11 +1409,12 @@ AC NO : 26100000261004</pre>
 
                 // Add an initial item row if none exist, with new default values
                 if (elements.itemsTableBody.children.length === 0) {
-                    addNewItemRow('Service', 0, 0.00); // Updated default values
+                    addNewItemRow('Service', 0, 0.00); 
                 } else {
                     // Re-setup editable elements for existing rows if page reloaded with items
                     elements.itemsTableBody.querySelectorAll('.items-table-row').forEach(row => {
-                        setupEditableElements(row.querySelectorAll('[contenteditable="true"]'));
+                        // Exclude itemTotal from direct editing setup as it's calculated
+                        setupEditableElements(row.querySelectorAll('[contenteditable="true"]:not([data-field="itemTotal"])'));
                         row.querySelector('.delete-item-btn').addEventListener('click', function() {
                             if (elements.itemsTableBody.children.length > 1) { 
                                 row.remove();
@@ -1440,9 +1437,14 @@ VAT NO: 310585080800003`;
 Ahli Bank IBAN: <strong>SA5110000026100000261004</strong><br>
 AC NO : 26100000261004`;
 
-                // Setup editable elements for non-item table elements
-                // Exclude specific elements like previewBankDetails if you don't want them directly editable.
-                setupEditableElements(document.querySelectorAll('[contenteditable="true"]:not([data-field="itemDescription"]):not([data-field="itemQty"]):not([data-field="itemPrice"])'));
+                // Set initial notes for the textarea and update display
+                elements.notesInput.value = `Quotation for 6 Cars
+Wash 3 times per week
+Total wash 72 per month`;
+                updateNotesDisplay();
+
+                // Setup editable elements for non-item table elements and exclude notes (now textarea)
+                setupEditableElements(document.querySelectorAll('[contenteditable="true"]:not([data-field="itemDescription"]):not([data-field="itemQty"]):not([data-field="itemPrice"]):not([data-field="notesText"])'));
                 
                 updateTotals(); 
             }
