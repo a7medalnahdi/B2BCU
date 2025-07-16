@@ -67,7 +67,7 @@
         }
         .container { 
             width: 100%; 
-            height:100vh; 
+            min-height:100vh; /* Changed to min-height for better responsiveness */
             padding: 0; 
             margin: 0; 
             display: flex; 
@@ -111,6 +111,9 @@
             padding-top: 20px; 
             flex-grow: 1; 
             justify-content: center; 
+            /* NEW: Added flex-wrap for responsiveness */
+            flex-wrap: wrap; 
+            align-items: flex-start; /* Align items to the start */
         }
 
         .left-panel {
@@ -124,22 +127,28 @@
             overflow-y: auto; 
             flex-shrink: 0;
             max-height: 100%; 
+            /* NEW: Added border-right for consistent border when wrapped */
+            border-right: 1px solid var(--border-color);
+            order: 2; /* Default order, will change in media query */
         }
         
         /* === Quotation page specific styles === */
         .quotation-preview-wrapper {
-            width: 100%;
+            width: calc(100% - 380px); /* Adjust width to make space for left-panel */
             height: auto; 
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 25px; 
-            flex-shrink: 0; 
+            flex-shrink: 1; /* Allow to shrink */
             overflow-y: auto; 
             max-height: 100%; 
+            flex-grow: 1; /* Allow to grow */
+            order: 1; /* Default order, will change in media query */
         }
         .quotation-page {
-            width: 210mm; 
+            width: 100%; /* Changed to 100% and added max-width */
+            max-width: 210mm; /* Fixed width only as max-width */
             background-color: var(--card-bg);
             box-shadow: var(--box-shadow);
             border-radius: var(--border-radius);
@@ -221,6 +230,24 @@
         }
         .company-logo { display: none; }
 
+        /* NEW: Employee Code Styling in Header */
+        .employee-code-display {
+            font-weight: 700;
+            color: var(--text-light); /* أبيض */
+            display: inline-block;
+            border: 1px solid transparent;
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin-right: 5px; /* Space between code and number */
+        }
+        .employee-code-display:focus {
+            outline: none;
+            border-color: var(--primary-color-dark);
+            box-shadow: 0 0 0 3px rgba(249, 103, 20, 0.2);
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--secondary-color); /* Black text when editing */
+        }
+
 
         /* Bill To/From Section */
         .bill-section {
@@ -229,6 +256,7 @@
             margin-bottom: 35px;
             text-align: left;
             gap: 4%; /* Space between the two boxes */
+            flex-wrap: wrap; /* NEW: Allow wrapping for smaller screens */
         }
         .bill-from, .bill-to {
             width: 48%; /* Adjusted for gap */
@@ -375,6 +403,7 @@
             margin-bottom: 35px;
             direction: ltr;
             gap: 4%; /* Space between bank details and totals */
+            flex-wrap: wrap; /* NEW: Allow wrapping for smaller screens */
         }
         .bank-details {
             width: 55%; /* Adjusted for gap */
@@ -471,6 +500,47 @@
             margin-left: 5px; 
             color: var(--secondary-color); 
         }
+        /* Styles for Discount Row */
+        .total-row.discount-row {
+            background-color: #FFF8F0; /* Very light orange background */
+            border: 1px solid var(--primary-color); /* Light orange border */
+            border-radius: var(--border-radius);
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .total-row.discount-row span:first-child {
+            color: var(--primary-color); /* Primary color for "Discount" text */
+            font-weight: 700;
+        }
+        .total-row.discount-row .value {
+            color: var(--primary-color-dark); /* Darker primary color for discount value */
+        }
+
+        /* Price Per Wash Note */
+        .price-per-wash-note {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-align: right;
+            width: 100%;
+            padding: 8px 0;
+            border-top: 1px dashed var(--table-row-border); /* Dotted border above it */
+            display: flex; /* Use flexbox for icon and text alignment */
+            align-items: center;
+            justify-content: flex-end; /* Align content to the right */
+            gap: 5px; /* Space between icon and text */
+        }
+        .price-per-wash-note .note-icon {
+            color: var(--primary-color); /* Icon color */
+            font-size: 1.1em; /* Slightly larger icon */
+        }
+        .price-per-wash-note span {
+            color: var(--secondary-color); /* Value itself is dark */
+        }
+
+
         .grand-total {
             font-size: 1.2rem; 
             font-weight: 800;
@@ -722,6 +792,154 @@
             padding: 20px;
             font-size: 1rem;
         }
+
+        /* === Media Queries for Responsiveness === */
+
+        /* For screens smaller than 1200px (adjust as needed) */
+        @media (max-width: 1200px) {
+            .main-layout {
+                flex-direction: column; /* Stack main content and controls vertically */
+                align-items: center; /* Center content horizontally */
+                padding: 15px; /* Adjust padding for smaller screens */
+            }
+
+            .left-panel {
+                order: 1; /* Place controls panel ON TOP when stacked */
+                width: 95%; /* Take almost full width */
+                max-width: 500px; /* Limit max width to keep it readable */
+                border-left: none; /* Remove left border when stacked */
+                border-right: none; /* Remove right border when stacked */
+                margin-bottom: 25px; /* Add space below panel when stacked */
+                max-height: none; /* Allow full height */
+                overflow-y: visible; /* Allow content to push height */
+                padding: 20px; /* Adjust padding */
+                border-radius: var(--border-radius); /* Add border-radius to the panel itself */
+                box-shadow: var(--box-shadow); /* Add shadow for separation */
+            }
+
+            .quotation-preview-wrapper {
+                order: 2; /* Place quotation preview BELOW controls when stacked */
+                width: 100%; /* Take full width */
+                padding: 15px; /* Adjust padding */
+                max-height: none; /* Allow full height */
+                overflow-y: visible; /* Allow content to push height */
+            }
+
+            .quotation-page {
+                padding: 25px; /* Reduce padding inside the quotation page */
+                /* max-width: 100%; is already set, ensuring it shrinks */
+            }
+
+            .header-section {
+                flex-direction: column; /* Stack logo and title vertically */
+                align-items: center; /* Center items */
+                text-align: center;
+                padding: 15px;
+            }
+            .header-company-logo {
+                order: 1; /* Keep logo at the top */
+                margin-bottom: 15px; /* Space between logo and title */
+            }
+            .logo-and-title {
+                align-items: center; /* Center title and info */
+                order: 2;
+            }
+            .invoice-info {
+                text-align: center; /* Center info text */
+            }
+
+            .bill-section {
+                flex-direction: column; /* Stack bill-from and bill-to vertically */
+                gap: 20px; /* Adjust gap */
+            }
+            .bill-from, .bill-to {
+                width: 100%; /* Take full width */
+            }
+
+            .summary-section {
+                flex-direction: column; /* Stack bank details and totals vertically */
+                gap: 25px; /* Adjust gap */
+            }
+            .bank-details, .totals {
+                width: 100%; /* Take full width */
+                align-items: flex-start; /* Align totals to start when stacked */
+            }
+            .totals {
+                padding-top: 15px; /* Add some padding if it stacks on bank details */
+            }
+        }
+
+        /* Further adjustments for very small screens (e.g., mobile portrait) */
+        @media (max-width: 480px) {
+            .top-bar {
+                flex-direction: column;
+                padding: 10px 15px;
+                gap: 10px;
+            }
+            .top-bar .title {
+                font-size: 1.1rem;
+            }
+            .back-link {
+                align-self: flex-start;
+            }
+            .top-bar .controls-container {
+                width: 100%;
+                justify-content: center; /* Center controls if space allows */
+            }
+
+            .quotation-page {
+                padding: 15px; /* Even less padding for tiny screens */
+                font-size: 14px;
+            }
+
+            .header-company-logo {
+                width: 150px; /* Smaller logo */
+            }
+            .quotation-title {
+                font-size: 2rem; /* Smaller title */
+            }
+            .invoice-info {
+                font-size: 0.9rem;
+            }
+
+            .items-table-header, .items-table-row {
+                grid-template-columns: 2fr 0.8fr 1fr 1fr 30px; /* Adjust columns for very small screens */
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            .currency {
+                width: 12px; /* Smaller currency icon */
+                height: 12px;
+            }
+            .delete-item-btn {
+                font-size: 0.8rem; /* Smaller delete button icon */
+            }
+
+            .total-row {
+                font-size: 0.9rem;
+                padding: 6px 0;
+            }
+            .grand-total {
+                font-size: 1.1rem;
+                padding: 10px 12px;
+            }
+            .price-per-wash-note {
+                font-size: 0.85rem;
+            }
+
+            .notes-section {
+                padding: 15px;
+                font-size: 0.85rem;
+            }
+            .notes-section ul {
+                padding-left: 10px;
+            }
+
+            .footer-section {
+                font-size: 0.8rem;
+                padding-top: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -734,95 +952,6 @@
 
     <div class="container">
         <div class="main-layout">
-            <div class="center-panel">
-                <div class="quotation-preview-wrapper">
-                    <div class="quotation-page" id="quotationPage">
-                        <div class="header-section">
-                            <div class="header-company-logo">
-                                <img src="https://i.ibb.co/n84xMCHz/Logo-2.png" alt="Your Company Logo" /> 
-                            </div>
-                            <div class="logo-and-title">
-                                <h1 class="quotation-title">QUOTATION</h1>
-                                <p class="invoice-info">
-                                    <span>Quotation Date: <span id="previewQuotationDate">25/06/2025</span></span><br>
-                                    <span>Quotation Number 
-                                        <span class="invoice-number-prefix" id="invoiceNumberPrefix">SW-220625-</span><span class="invoice-number-suffix" id="invoiceNumberSuffix" contenteditable="true" data-field="invoiceNumberSuffix" data-input-type="number">001</span>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="bill-section">
-                            <div class="bill-from">
-                                <p class="section-heading">FROM</p>
-                                <p id="previewBillFrom" contenteditable="true" data-field="billFromText" data-placeholder="معلومات المرسل...">CR: Lamsa Modern Technology Co
-CR NO: 1010638717
-VAT NO: 310585080800003</p> 
-                            </div>
-                            <div class="bill-to">
-                                <p class="section-heading">TO</p>
-                                <p id="previewTo" contenteditable="true" data-field="toText" data-placeholder="اسم العميل">اسم العميل هنا</p>
-                            </div>
-                        </div>
-
-                        <div class="items-table-header">
-                            <div class="item-description-header">ITEM DESCRIPTION</div>
-                            <div class="item-qty-header">QTY</div>
-                            <div class="item-price-header">PRICE/WASH</div>
-                            <div class="item-total-header">TOTAL</div>
-                            <div></div>
-                        </div>
-
-                        <div class="items-table-body" id="itemsTableBody">
-                        </div>
-
-                        <button class="add-item-in-quotation" id="addItemInQuotationBtn">
-                            <i class="fa-solid fa-plus"></i> &nbsp; Add New Item
-                        </button>
-
-                        <div class="summary-section">
-                            <div class="bank-details">
-                                <p class="section-heading">
-                                    BANK DETAILS
-                                </p>
-                                <pre id="previewBankDetails" data-field="bankDetailsText"><strong>شركة اللمسة العصرية التقنية</strong><br>
-Ahli Bank IBAN: <strong>SA5110000026100000261004</strong><br>
-AC NO : 26100000261004</pre>
-                            </div>
-                            <div class="totals">
-                                <div class="total-row">
-                                    <span>Sub Total</span> <span class="value" id="previewSubTotal">0.00 <span class="currency"></span></span>
-                                </div>
-                                <div class="total-row">
-                                    <span>Vat (<span id="vatRateDisplay">15</span>%)</span> <span class="value" id="previewVat">0.00 <span class="currency"></span></span>
-                                </div>
-                                <div class="total-row grand-total">
-                                    <span style="color: var(--grand-total-text);">Grand Total</span> <span class="value" id="previewGrandTotal">0.00 <span class="currency"></span></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="notes-section">
-                            <p class="section-heading">NOTES</p>
-                            <ul id="previewNotes">
-                                <li>Quotation for 6 Cars</li>
-                                <li>Wash 3 times per week</li>
-                                <li>Total wash 72 per month</li>
-                            </ul>
-                        </div>
-
-                        <div class="footer-section">
-                            <div class="contact-info">
-                                <p contenteditable="true" data-field="phone" data-placeholder="+966 56 999 0806">+966 56 999 0806</p>
-                                <p contenteditable="true" data-field="email" data-placeholder="Business@sweater.sa">Business@sweater.sa</p>
-                                <p contenteditable="true" data-field="address" data-placeholder="Al Sahafa, Anas bin Malik st">Al Sahafa, Anas bin Malik st</p>
-                                <p contenteditable="true" data-field="website" data-placeholder="www.sweater.sa">www.sweater.sa</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="left-panel">
                 <div class="section-title">Controls</div>
                 <p style="font-size:0.85rem; color: var(--tertiary-color); margin-bottom:15px; line-height:1.6;">
@@ -833,8 +962,16 @@ AC NO : 26100000261004</pre>
                     <input type="date" id="quotationDateInput">
                 </div>
                 <div class="control-group">
+                    <label for="employeeCodeInput">Employee Code (2 letters):</label>
+                    <input type="text" id="employeeCodeInput" value="AA" maxlength="2" style="text-transform: uppercase;">
+                </div>
+                <div class="control-group">
                     <label for="vatRateInput">VAT Rate (%):</label>
                     <input type="number" id="vatRateInput" value="15" min="0" max="100" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="discountInput">Discount (%):</label>
+                    <input type="number" id="discountInput" value="0" min="0" max="100" step="1">
                 </div>
 
                 <div class="control-group">
@@ -852,6 +989,100 @@ AC NO : 26100000261004</pre>
                 </div>
                 <div class="tool-group">
                     <button class="btn" id="resetSequenceBtn" style="background-color: var(--danger-color);"><i class="fa-solid fa-rotate-left"></i> إعادة تعيين تسلسل الفاتورة</button>
+                </div>
+            </div>
+
+            <div class="quotation-preview-wrapper">
+                <div class="quotation-page" id="quotationPage">
+                    <div class="header-section">
+                        <div class="header-company-logo">
+                            <img src="https://i.ibb.co/n84xMCHz/Logo-2.png" alt="Your Company Logo" /> 
+                        </div>
+                        <div class="logo-and-title">
+                            <h1 class="quotation-title">QUOTATION</h1>
+                            <p class="invoice-info">
+                                <span>Quotation Date: <span id="previewQuotationDate">25/06/2025</span></span><br>
+                                <span>
+                                    Quotation Number 
+                                    <span class="employee-code-display" id="employeeCodeDisplay" contenteditable="true" data-field="employeeCode" data-placeholder="AA" maxlength="2">AA</span>-<span class="invoice-number-prefix" id="invoiceNumberPrefix">SW-220625-</span><span class="invoice-number-suffix" id="invoiceNumberSuffix" contenteditable="true" data-field="invoiceNumberSuffix" data-input-type="number">001</span>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bill-section">
+                        <div class="bill-from">
+                            <p class="section-heading">FROM</p>
+                            <p id="previewBillFrom" contenteditable="true" data-field="billFromText" data-placeholder="معلومات المرسل...">CR: Lamsa Modern Technology Co
+CR NO: 1010638717
+VAT NO: 310585080800003</p> 
+                        </div>
+                        <div class="bill-to">
+                            <p class="section-heading">TO</p>
+                            <p id="previewTo" contenteditable="true" data-field="toText" data-placeholder="اسم العميل">اسم العميل هنا</p>
+                        </div>
+                    </div>
+
+                    <div class="items-table-header">
+                        <div class="item-description-header">ITEM DESCRIPTION</div>
+                        <div class="item-qty-header">QTY</div>
+                        <div class="item-price-header">PRICE/WASH</div>
+                        <div class="item-total-header">TOTAL</div>
+                        <div></div>
+                    </div>
+
+                    <div class="items-table-body" id="itemsTableBody">
+                    </div>
+
+                    <button class="add-item-in-quotation" id="addItemInQuotationBtn">
+                        <i class="fa-solid fa-plus"></i> &nbsp; Add New Item
+                    </button>
+
+                    <div class="summary-section">
+                        <div class="bank-details">
+                            <p class="section-heading">
+                                BANK DETAILS
+                            </p>
+                            <pre id="previewBankDetails" data-field="bankDetailsText"><strong>شركة اللمسة العصرية التقنية</strong><br>
+Ahli Bank IBAN: <strong>SA5110000026100000261004</strong><br>
+AC NO : 26100000261004</pre>
+                        </div>
+                        <div class="totals">
+                            <div class="total-row">
+                                <span>Sub Total</span> <span class="value" id="previewSubTotal">0.00 <span class="currency"></span></span>
+                            </div>
+                            <div class="total-row discount-row">
+                                <span>Discount (<span id="discountRateDisplay">0</span>%)</span> <span class="value" id="previewDiscount">0.00 <span class="currency"></span></span>
+                            </div>
+                            <div class="total-row">
+                                <span>Vat (<span id="vatRateDisplay">15</span>%)</span> <span class="value" id="previewVat">0.00 <span class="currency"></span></span>
+                            </div>
+                            <div class="total-row grand-total">
+                                <span style="color: var(--grand-total-text);">Grand Total</span> <span class="value" id="previewGrandTotal">0.00 <span class="currency"></span></span>
+                            </div>
+                            <div class="price-per-wash-note" id="pricePerWashNote">
+                                <i class="fa-solid fa-circle-info note-icon"></i> ( Price per wash: <span id="calculatedPricePerWash">0.00</span> )
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notes-section">
+                        <p class="section-heading">NOTES</p>
+                        <ul id="previewNotes">
+                            <li>Quotation for 6 Cars</li>
+                            <li>Wash 3 times per week</li>
+                            <li>Total wash 72 per month</li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <div class="contact-info">
+                            <p contenteditable="true" data-field="phone" data-placeholder="+966 56 999 0806">+966 56 999 0806</p>
+                            <p contenteditable="true" data-field="email" data-placeholder="Business@sweater.sa">Business@sweater.sa</p>
+                            <p contenteditable="true" data-field="address" data-placeholder="Al Sahafa, Anas bin Malik st">Al Sahafa, Anas bin Malik st</p>
+                            <p contenteditable="true" data-field="website" data-placeholder="www.sweater.sa">www.sweater.sa</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -884,6 +1115,8 @@ AC NO : 26100000261004</pre>
                 notificationContainer: document.getElementById('notification-container'),
                 addItemInQuotationBtn: document.getElementById('addItemInQuotationBtn'),
                 itemsTableBody: document.getElementById('itemsTableBody'),
+                employeeCodeInput: document.getElementById('employeeCodeInput'), 
+                employeeCodeDisplay: document.getElementById('employeeCodeDisplay'), 
                 invoiceNumberPrefix: document.getElementById('invoiceNumberPrefix'),
                 invoiceNumberSuffix: document.getElementById('invoiceNumberSuffix'),
                 resetSequenceBtn: document.getElementById('resetSequenceBtn'),
@@ -891,13 +1124,21 @@ AC NO : 26100000261004</pre>
                 quotationDateInput: document.getElementById('quotationDateInput'),     
                 vatRateInput: document.getElementById('vatRateInput'),                 
                 vatRateDisplay: document.getElementById('vatRateDisplay'),             
+                discountInput: document.getElementById('discountInput'), 
+                discountRateDisplay: document.getElementById('discountRateDisplay'), 
+                previewDiscount: document.getElementById('previewDiscount'), 
+                previewSubTotal: document.getElementById('previewSubTotal'), 
+                previewVat: document.getElementById('previewVat'),             
+                previewGrandTotal: document.getElementById('previewGrandTotal'), 
+                pricePerWashNote: document.getElementById('pricePerWashNote'), 
+                calculatedPricePerWash: document.getElementById('calculatedPricePerWash'), 
                 saveQuotationBtn: document.getElementById('saveQuotationBtn'),         
                 loadQuotationBtn: document.getElementById('loadQuotationBtn'),         
                 previewBillFrom: document.getElementById('previewBillFrom'),
                 previewTo: document.getElementById('previewTo'),
                 previewBankDetails: document.getElementById('previewBankDetails'),
-                previewNotes: document.getElementById('previewNotes'), // This is now just for display
-                notesInput: document.getElementById('notesInput'), // NEW: Textarea for notes input
+                previewNotes: document.getElementById('previewNotes'), 
+                notesInput: document.getElementById('notesInput'), 
                 footerPhone: document.querySelector('[data-field="phone"]'),
                 footerEmail: document.querySelector('[data-field="email"]'),
                 footerAddress: document.querySelector('[data-field="address"]'),
@@ -985,8 +1226,12 @@ AC NO : 26100000261004</pre>
             // --- Calculate and Update Totals ---
             function updateTotals() {
                 let subTotal = 0;
+                let totalQuantity = 0; 
                 const vatRate = parseFloat(elements.vatRateInput.value) / 100 || 0;
+                const discountRate = parseFloat(elements.discountInput.value) / 100 || 0; 
+                
                 elements.vatRateDisplay.textContent = parseFloat(elements.vatRateInput.value).toFixed(0);
+                elements.discountRateDisplay.textContent = parseFloat(elements.discountInput.value).toFixed(0); 
 
                 elements.itemsTableBody.querySelectorAll('.items-table-row').forEach(row => {
                     const qtyElement = row.querySelector('[data-field="itemQty"]');
@@ -998,14 +1243,32 @@ AC NO : 26100000261004</pre>
                     const itemTotal = qty * price;
                     row.querySelector('[data-field="itemTotal"]').innerHTML = `${itemTotal.toFixed(2)} ${getCurrencySymbolHtml()}`;
                     subTotal += itemTotal;
+                    totalQuantity += qty; 
                 });
                 
-                const vatAmount = subTotal * vatRate;
-                const grandTotal = subTotal + vatAmount;
+                const discountAmount = subTotal * discountRate; 
+                const subTotalAfterDiscount = subTotal - discountAmount; 
 
-                document.getElementById('previewSubTotal').innerHTML = `${subTotal.toFixed(2)} ${getCurrencySymbolHtml()}`;
-                document.getElementById('previewVat').innerHTML = `${vatAmount.toFixed(2)} ${getCurrencySymbolHtml()}`;
-                document.getElementById('previewGrandTotal').innerHTML = `${grandTotal.toFixed(2)} ${getCurrencySymbolHtml()}`;
+                const vatAmount = subTotalAfterDiscount * vatRate; 
+                const grandTotal = subTotalAfterDiscount + vatAmount; 
+
+                elements.previewSubTotal.innerHTML = `${subTotal.toFixed(2)} ${getCurrencySymbolHtml()}`;
+                elements.previewDiscount.innerHTML = `${discountAmount.toFixed(2)} ${getCurrencySymbolHtml()}`; 
+                elements.previewVat.innerHTML = `${vatAmount.toFixed(2)} ${getCurrencySymbolHtml()}`;
+                elements.previewGrandTotal.innerHTML = `${grandTotal.toFixed(2)} ${getCurrencySymbolHtml()}`;
+
+                // Calculate and display Price per wash
+                // The condition was simplified here to ensure it appears if total quantity is greater than 0
+                if (totalQuantity > 0) { 
+                    const pricePerWash = grandTotal / totalQuantity;
+                    // Corrected to use innerHTML to render the currency symbol
+                    elements.calculatedPricePerWash.innerHTML = `${pricePerWash.toFixed(2)} ${getCurrencySymbolHtml()}`; 
+                    elements.pricePerWashNote.style.display = 'flex'; // Changed to flex to align icon and text
+                } else {
+                    // Corrected to use innerHTML to render the currency symbol
+                    elements.calculatedPricePerWash.innerHTML = `0.00 ${getCurrencySymbolHtml()}`; 
+                    elements.pricePerWashNote.style.display = 'none'; 
+                }
             }
 
             // --- Function to sanitize HTML content from contenteditable (for notes) ---
@@ -1018,8 +1281,8 @@ AC NO : 26100000261004</pre>
             // --- Update Notes display from textarea ---
             function updateNotesDisplay() {
                 const notesText = elements.notesInput.value;
-                elements.previewNotes.innerHTML = ''; // Clear existing notes
-                const lines = notesText.split('\n').filter(line => line.trim() !== ''); // Split by newlines and filter empty
+                elements.previewNotes.innerHTML = ''; 
+                const lines = notesText.split('\n').filter(line => line.trim() !== ''); 
                 
                 if (lines.length > 0) {
                     lines.forEach(line => {
@@ -1028,9 +1291,7 @@ AC NO : 26100000261004</pre>
                         elements.previewNotes.appendChild(li);
                     });
                 } else {
-                    // Optional: If you want a placeholder to show when textarea is empty
-                    // you'd need to manage it with CSS :empty:before on the UL
-                    // or dynamically add a placeholder li. For now, it will just be empty.
+                    elements.previewNotes.innerHTML = ''; /* Ensure it's truly empty if no notes */
                 }
             }
 
@@ -1046,7 +1307,6 @@ AC NO : 26100000261004</pre>
                             }
                             this.textContent = this.textContent.replace(/[^0-9.]/g, ''); 
                         } else {
-                            // For all other contenteditable (non-number, non-list-type)
                             this.textContent = sanitizeHtml(this.innerHTML); 
                         }
                     });
@@ -1054,10 +1314,9 @@ AC NO : 26100000261004</pre>
                     element.addEventListener('blur', function() {
                         let newContent = this.innerHTML.trim();
                         
-                        // Sanitize all contenteditable elements on blur, except if handling specifically differently (like notes, which is now textarea-driven)
                         newContent = sanitizeHtml(newContent);
 
-                        if (newContent === '' && this.dataset.placeholder) {
+                        if (newContent === '' && element.dataset.placeholder) { 
                             this.innerHTML = ''; 
                         } else if (this.dataset.inputType === 'number') {
                             let val = parseFloat(newContent) || 0; 
@@ -1072,7 +1331,10 @@ AC NO : 26100000261004</pre>
                                     this.innerHTML = `${parseFloat(this.textContent).toFixed(2)} ${getCurrencySymbolHtml()}`;
                                 }
                             }
-                        } else {
+                        } else if (element.dataset.field === 'employeeCode') { 
+                            this.textContent = newContent.toUpperCase().substring(0, 2); 
+                        }
+                        else {
                             this.innerHTML = newContent;
                         }
 
@@ -1138,8 +1400,16 @@ AC NO : 26100000261004</pre>
 
             // --- VAT Rate Input Handler ---
             elements.vatRateInput.addEventListener('input', updateTotals);
+            // Discount Input Handler
+            elements.discountInput.addEventListener('input', updateTotals);
 
-            // NEW: Notes Textarea input handler
+            // Employee Code Input Handler
+            elements.employeeCodeInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase().substring(0, 2); 
+                elements.employeeCodeDisplay.textContent = this.value;
+            });
+
+            // Notes Textarea input handler
             elements.notesInput.addEventListener('input', updateNotesDisplay);
 
 
@@ -1156,14 +1426,16 @@ AC NO : 26100000261004</pre>
 
                 return {
                     quotationDate: elements.quotationDateInput.value,
+                    employeeCode: elements.employeeCodeInput.value, 
                     invoiceNumberPrefix: elements.invoiceNumberPrefix.textContent,
                     invoiceNumberSuffix: elements.invoiceNumberSuffix.textContent,
                     billFromText: sanitizeHtml(elements.previewBillFrom.innerHTML),
                     toText: sanitizeHtml(elements.previewTo.innerHTML),
                     items: items,
                     vatRate: parseFloat(elements.vatRateInput.value) || 0,
+                    discountRate: parseFloat(elements.discountInput.value) || 0, 
                     bankDetailsText: elements.previewBankDetails.innerHTML, 
-                    notesText: elements.notesInput.value, // Now directly from textarea
+                    notesText: elements.notesInput.value, 
                     phone: sanitizeHtml(elements.footerPhone.innerHTML),
                     email: sanitizeHtml(elements.footerEmail.innerHTML),
                     address: sanitizeHtml(elements.footerAddress.innerHTML),
@@ -1173,39 +1445,38 @@ AC NO : 26100000261004</pre>
 
             function setQuotationData(data) {
                 elements.quotationDateInput.value = data.quotationDate;
-                // Trigger change event to update display
                 const changeEvent = new Event('change');
                 elements.quotationDateInput.dispatchEvent(changeEvent);
+
+                elements.employeeCodeInput.value = data.employeeCode || 'AA'; 
+                elements.employeeCodeDisplay.textContent = data.employeeCode || 'AA'; 
 
                 elements.invoiceNumberPrefix.textContent = data.invoiceNumberPrefix;
                 elements.invoiceNumberSuffix.textContent = data.invoiceNumberSuffix;
                 elements.previewBillFrom.innerHTML = data.billFromText;
                 elements.previewTo.innerHTML = data.toText;
                 
-                // Clear existing items
                 elements.itemsTableBody.innerHTML = '';
                 data.items.forEach(item => addNewItemRow(item.description, item.qty, item.price));
 
                 elements.vatRateInput.value = data.vatRate;
                 elements.vatRateDisplay.textContent = data.vatRate.toFixed(0);
                 
+                elements.discountInput.value = data.discountRate || 0; 
+                elements.discountRateDisplay.textContent = (data.discountRate || 0).toFixed(0); 
+                
                 elements.previewBankDetails.innerHTML = data.bankDetailsText;
                 
-                // Update notes textarea and then the display
                 elements.notesInput.value = data.notesText || ''; 
-                updateNotesDisplay(); // Update the UL from the textarea content
-
+                updateNotesDisplay(); 
 
                 elements.footerPhone.innerHTML = data.phone;
                 elements.footerEmail.innerHTML = data.email;
                 elements.footerAddress.innerHTML = data.address;
                 elements.footerWebsite.innerHTML = data.website;
 
-                // Update company logo source
                 document.querySelector('.header-company-logo img').src = COMPANY_LOGO_URL;
 
-                // Re-apply editable setup to all newly loaded/re-generated content
-                // IMPORTANT: Ensure elements.editableElements is re-queried if new contenteditable elements are added dynamically
                 setupEditableElements(document.querySelectorAll('[contenteditable="true"]'));
                 updateTotals();
             }
@@ -1216,10 +1487,8 @@ AC NO : 26100000261004</pre>
                     let savedQuotations = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SAVED_QUOTATIONS_KEY) || '[]');
                     const currentData = getQuotationData();
                     
-                    // Check if a quotation with the same name already exists
                     const existingIndex = savedQuotations.findIndex(q => q.name === quotationName);
                     if (existingIndex > -1) {
-                        // If exists, confirm overwrite
                         if (confirm(`فاتورة بهذا الاسم "${quotationName}" موجودة بالفعل. هل تريد الكتابة فوقها؟`)) {
                             savedQuotations[existingIndex] = { name: quotationName, timestamp: new Date().toISOString(), data: currentData };
                         } else {
@@ -1237,10 +1506,9 @@ AC NO : 26100000261004</pre>
                 }
             });
 
-            // --- Load Quotation Modal Logic ---
             elements.loadQuotationBtn.addEventListener('click', () => {
                 const savedQuotations = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SAVED_QUOTATIONS_KEY) || '[]');
-                elements.savedQuotationsList.innerHTML = ''; // Clear previous list
+                elements.savedQuotationsList.innerHTML = ''; 
 
                 if (savedQuotations.length === 0) {
                     elements.noQuotationsMessage.style.display = 'block';
@@ -1262,12 +1530,12 @@ AC NO : 26100000261004</pre>
                         elements.savedQuotationsList.appendChild(listItem);
                     });
 
-                    // Attach event listeners to new load/delete buttons
                     elements.savedQuotationsList.querySelectorAll('.modal-btn.load').forEach(button => {
                         button.addEventListener('click', (event) => {
                             const index = event.target.dataset.index;
                             setQuotationData(savedQuotations[index].data);
                             elements.loadQuotationModal.classList.remove('show');
+                            showNotification('success', 'تم التحميل', `تم تحميل الفاتورة "${savedQuotations[index].name}" بنجاح.`);
                         });
                     });
 
@@ -1275,25 +1543,22 @@ AC NO : 26100000261004</pre>
                         button.addEventListener('click', (event) => {
                             const index = event.target.dataset.index;
                             if (confirm(`هل أنت متأكد أنك تريد حذف الفاتورة "${savedQuotations[index].name}"؟`)) {
-                                savedQuotations.splice(index, 1); // Remove from array
-                                localStorage.setItem(LOCAL_STORAGE_SAVED_QUOTATIONS_KEY, JSON.stringify(savedQuotations)); // Update localStorage
+                                savedQuotations.splice(index, 1); 
+                                localStorage.setItem(LOCAL_STORAGE_SAVED_QUOTATIONS_KEY, JSON.stringify(savedQuotations)); 
                                 showNotification('success', 'تم الحذف', 'تم حذف الفاتورة بنجاح.');
-                                elements.loadQuotationModal.classList.remove('show'); // Hide modal
-                                // Instead of re-opening, ideally, you'd just remove the deleted item from the list
-                                // For simplicity here, we'll re-call load logic to rebuild the list
+                                elements.loadQuotationModal.classList.remove('show'); 
                                 elements.loadQuotationBtn.click(); 
                             }
                         });
                     });
                 }
-                elements.loadQuotationModal.classList.add('show'); // Show the modal
+                elements.loadQuotationModal.classList.add('show'); 
             });
 
             elements.closeLoadModal.addEventListener('click', () => {
-                elements.loadQuotationModal.classList.remove('show'); // Hide the modal
+                elements.loadQuotationModal.classList.remove('show'); 
             });
 
-            // Close modal if user clicks outside of it
             elements.loadQuotationModal.addEventListener('click', (event) => {
                 if (event.target === elements.loadQuotationModal) {
                     elements.loadQuotationModal.classList.remove('show');
@@ -1352,7 +1617,7 @@ AC NO : 26100000261004</pre>
                     const width = rect.width;
                     const height = rect.height;
 
-                    const canvas = await html2canvas(clonedQuotationPage, { // Capture the clone
+                    const canvas = await html2canvas(clonedQuotationPage, { 
                         scale: 2, 
                         useCORS: true,
                         backgroundColor: '#ffffff' 
@@ -1368,7 +1633,9 @@ AC NO : 26100000261004</pre>
 
                     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
                     
-                    const invoiceNumForFilename = `${elements.invoiceNumberPrefix.textContent}${elements.invoiceNumberSuffix.textContent}`.replace(/[^a-zA-Z0-9-.]/g, '_');
+                    // Use employee code in filename if present
+                    const employeeCodeForFilename = elements.employeeCodeInput.value ? `${elements.employeeCodeInput.value}-` : '';
+                    const invoiceNumForFilename = `${employeeCodeForFilename}${elements.invoiceNumberPrefix.textContent}${elements.invoiceNumberSuffix.textContent}`.replace(/[^a-zA-Z0-9-.]/g, '_');
                     pdf.save(`Quotation-${invoiceNumForFilename}-${Date.now()}.pdf`);
 
                     const currentSuffixNum = parseInt(elements.invoiceNumberSuffix.textContent) || 0;
@@ -1407,13 +1674,16 @@ AC NO : 26100000261004</pre>
                 elements.invoiceNumberPrefix.textContent = initialParts.prefix;
                 elements.invoiceNumberSuffix.textContent = initialParts.suffix;
 
+                // Set default employee code
+                elements.employeeCodeInput.value = 'AA';
+                elements.employeeCodeDisplay.textContent = 'AA';
+
                 // Add an initial item row if none exist, with new default values
                 if (elements.itemsTableBody.children.length === 0) {
                     addNewItemRow('Service', 0, 0.00); 
                 } else {
                     // Re-setup editable elements for existing rows if page reloaded with items
                     elements.itemsTableBody.querySelectorAll('.items-table-row').forEach(row => {
-                        // Exclude itemTotal from direct editing setup as it's calculated
                         setupEditableElements(row.querySelectorAll('[contenteditable="true"]:not([data-field="itemTotal"])'));
                         row.querySelector('.delete-item-btn').addEventListener('click', function() {
                             if (elements.itemsTableBody.children.length > 1) { 
