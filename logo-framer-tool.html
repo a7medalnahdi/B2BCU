@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>قوالب الشراكات — تصدير فائق الجودة (scale=4)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #f96714;
+      --primary-color-dark: #e05a12;
+      --bg-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --text-color: #333;
+      --border-color: #dee2e6;
+      --border-radius: 12px;
+      --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --main-font: 'Cairo', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--main-font);
+      background: var(--bg-color);
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .top-bar {
+      background-color: var(--card-bg);
+      padding: 0.75rem 1.5rem; box-shadow: var(--box-shadow);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-link { font-size: 1rem; color: var(--primary-color); text-decoration: none; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    .top-bar .title { flex: 1; text-align: center; font-size: 1.5rem; font-weight: 800; }
+    .top-bar .logo { height: 45px; margin-left: 1rem; }
+
+    .container {
+      flex-grow: 1; max-width: 1200px; margin: 2rem auto; padding: 0 1rem;
+      display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; justify-content: center;
+    }
+    .main-controls {
+      background: var(--card-bg); padding: 1.5rem; border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow); flex: 1 1 350px; display: flex; flex-direction: column; gap: 1.5rem; height: fit-content;
+    }
+    .section-title { font-weight: 800; font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-color); padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+    .control-group { margin-bottom: 1rem; }
+    .control-group label { display: block; font-weight: 700; font-size: 1rem; margin-bottom: 0.75rem; }
+    .template-selector { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .template-thumb { width: 150px; height: 150px; border: 3px solid var(--border-color); border-radius: var(--border-radius); cursor: pointer; transition: all 0.2s ease-in-out; object-fit: contain; background-color: #fafafa; }
+    .template-thumb:hover { transform: scale(1.05); border-color: var(--primary-color-dark); }
+    .template-thumb.active { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-color); transform: scale(1.1); }
+
+    .btn { cursor: pointer; border: none; border-radius: var(--border-radius); padding: 12px 28px; font-size: 1.1rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; justify-content: center; width: 100%; }
+    .btn-upload { background-color: #22c55e; color: #fff; }
+    .btn-upload:hover { background-color: #16a34a; }
+    .btn-download { background-color: var(--primary-color); color: #fff; }
+    .btn-download:hover { background-color: var(--primary-color-dark); }
+    input[type="file"] { display: none; }
+
+    /* نسبة المعاينة = نسبة التصدير 3:2 للحفاظ على الجودة دون تمدد */
+    .preview-area {
+      position: relative; flex: 1 1 500px; aspect-ratio: 3 / 2;
+      overflow: hidden; box-shadow: var(--box-shadow); background: var(--card-bg); border-radius: var(--border-radius);
+    }
+    #placeholder-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #6c757d; font-size: 1.2rem; text-align: center; }
+    #template-image, #logo-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+    #template-image { z-index: 1; }
+    #logo-image { z-index: 2; width: 30%; height: auto; cursor: grab; }
+    #logo-image:active { cursor: grabbing; }
+
+    .slider-control { display: flex; align-items: center; gap: 15px; }
+    .slider-control input[type="range"] { -webkit-appearance: none; appearance: none; flex: 1; height: 8px; background: var(--border-color); border-radius: 5px; outline: none; opacity: 0.7; transition: opacity .2s; }
+    .slider-control input[type="range"]:hover { opacity: 1; }
+    .slider-control input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--primary-color); cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+    .slider-control input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: var(--primary-color); cursor: pointer; border-radius: 50%; border: none; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
+    .slider-control span { min-width: 40px; text-align: left; font-weight: 600; font-size: 1rem; }
+
+    .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.85); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; z-index: 2000; backdrop-filter: blur(5px); font-size: 1.5rem; font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .main-controls, .preview-area { flex-basis: auto; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a href="./index.html" class="back-link">&larr; العودة للرئيسية</a>
+    <div class="title">قوالب الشراكات</div>
+    <img src="https://i.ibb.co/qLNFj53h/Logo-2.png" alt="شعار الشركة" class="logo">
+  </div>
+
+  <div class="container">
+    <div class="main-controls">
+      <div class="control-group">
+        <div class="section-title">1. اختر القالب المطلوب</div>
+        <div class="template-selector">
+          <img src="https://i.ibb.co/nqcpnVM4/Artboard-2.png" alt="قالب عصري" class="template-thumb active" data-template-src="https://i.ibb.co/nqcpnVM4/Artboard-2.png" data-position-x="50%" data-position-y="50%" data-size="30%">
+          <img src="https://i.ibb.co/gL64tpnH/Artboard-3.png" alt="قالب الحد الأدنى" class="template-thumb" data-template-src="https://i.ibb.co/gL64tpnH/Artboard-3.png" data-position-x="50%" data-position-y="35%" data-size="25%">
+          <img src="https://i.ibb.co/Df4Z9Khx/LINK-30-7.png" alt="قالب مستقبلي" class="template-thumb" data-template-src="https://i.ibb.co/Df4Z9Khx/LINK-30-7.png" data-position-x="50%" data-position-y="70%" data-size="35%">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="section-title">2. ارفع شعارك</div>
+        <label for="logoUpload" class="btn btn-upload">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          رفع الشعار
+        </label>
+      </div>
+      <input type="file" id="logoUpload" accept="image/*">
+
+      <div class="control-group">
+        <div class="section-title">3. تحكم بالشعار</div>
+        <div class="slider-control">
+          <label>الحجم:</label>
+          <input type="range" id="logoSizeSlider" min="10" max="100" value="30">
+          <span id="logoSizeValue">30%</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="section-title">4. تحميل التصميم</div>
+        <button id="downloadBtn" class="btn btn-download" style="display: none;">
+          <i class="fa-solid fa-download"></i>
+          تحميل التصميم
+        </button>
+      </div>
+    </div>
+
+    <div class="preview-area">
+      <div id="placeholder-text"><p>اختر قالبًا وارفع شعارًا للبدء</p></div>
+      <img id="template-image" src="" alt="قالب التصميم"/>
+      <img id="logo-image" src="" alt="شعار العميل" style="display: none;"/>
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <p>جاري إنشاء التصميم...</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoUpload = document.getElementById('logoUpload');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const previewArea = document.querySelector('.preview-area');
+      const templateImage = document.getElementById('template-image');
+      const logoImage = document.getElementById('logo-image');
+      const placeholderText = document.getElementById('placeholder-text');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const templateThumbs = document.querySelectorAll('.template-thumb');
+      const logoSizeSlider = document.getElementById('logoSizeSlider');
+      const logoSizeValue = document.getElementById('logoSizeValue');
+
+      let isDragging = false;
+      let activeTemplate = null;
+      let hasLogo = false;
+
+      // العرض المستهدف (للحسبة فقط). سنستخدم scale=4 للتصدير الفائق.
+      const EXPORT_WIDTH = 1952.64; // نسبة 3:2
+      const EXPORT_SCALE = 4;       // *** مفتاح الجودة ***
+
+      // تفعيل CORS لصور الروابط الخارجية
+      templateImage.crossOrigin = 'anonymous';
+      logoImage.crossOrigin = 'anonymous';
+
+      // تحميل قالب افتراضي
+      const loadInitialTemplate = () => {
+        const initialTemplate = document.querySelector('.template-thumb.active');
+        if (initialTemplate) {
+          setTemplate(initialTemplate);
+        }
+      };
+
+      const setTemplate = (thumb) => {
+        templateImage.src = thumb.dataset.templateSrc;
+        activeTemplate = thumb;
+        placeholderText.style.display = 'none';
+        setLogoFromTemplate(thumb);
+        checkDownloadButtonState();
+      };
+
+      // تطبيق بيانات القالب على الشعار (موضع وحجم)
+      const setLogoFromTemplate = (tpl) => {
+        const x = tpl.dataset.positionX || '50%';
+        const y = tpl.dataset.positionY || '50%';
+        const size = tpl.dataset.size || '30%';
+        logoImage.style.left = x;
+        logoImage.style.top = y;
+        logoImage.style.width = size;
+        updateSliderValue(size);
+      };
+
+      const updateSliderValue = (size) => {
+        const numericValue = parseInt(size, 10);
+        logoSizeSlider.value = numericValue;
+        logoSizeValue.textContent = numericValue + '%';
+      };
+
+      const checkDownloadButtonState = () => {
+        downloadBtn.style.display = (activeTemplate && hasLogo) ? 'inline-flex' : 'none';
+      };
+
+      // اختيار القالب
+      templateThumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          templateThumbs.forEach(t => t.classList.remove('active'));
+          thumb.classList.add('active');
+          setTemplate(thumb);
+        });
+      });
+
+      // رفع الشعار
+      logoUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          logoImage.src = e.target.result;
+          logoImage.style.display = 'block';
+          hasLogo = true;
+          // إزالة أي transform افتراضي
+          logoImage.style.transform = '';
+          checkDownloadButtonState();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // تغيير حجم الشعار
+      logoSizeSlider.addEventListener('input', (e) => {
+        const size = e.target.value + '%';
+        logoImage.style.width = size;
+        logoSizeValue.textContent = size;
+      });
+
+      // سحب الشعار: حفظ الموضع كنِسَب %
+      logoImage.addEventListener('mousedown', (e) => {
+        if (!hasLogo) return;
+        isDragging = true;
+        e.preventDefault();
+        const rect = previewArea.getBoundingClientRect();
+        const startLeft = logoImage.offsetLeft;
+        const startTop = logoImage.offsetTop;
+        const shiftX = e.clientX - rect.left - startLeft;
+        const shiftY = e.clientY - rect.top - startTop;
+
+        const onMouseMove = (moveEvent) => {
+          if (!isDragging) return;
+          let newLeft = moveEvent.clientX - rect.left - shiftX;
+          let newTop  = moveEvent.clientY - rect.top  - shiftY;
+          const maxLeft = rect.width - logoImage.offsetWidth;
+          const maxTop  = rect.height - logoImage.offsetHeight;
+          newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+          newTop  = Math.max(0, Math.min(newTop,  maxTop));
+          logoImage.style.left = (newLeft / rect.width) * 100 + '%';
+          logoImage.style.top  = (newTop  / rect.height) * 100 + '%';
+        };
+
+        const onMouseUp = () => {
+          isDragging = false;
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      });
+
+      // تصدير فائق الجودة: scale=4 + toBlob
+      downloadBtn.addEventListener('click', async () => {
+        loadingOverlay.style.display = 'flex';
+        await new Promise(res => setTimeout(res, 50));
+        try {
+          // نستخدم scale ثابت عالي (4). ممكن ترفعه 5 أو 6 إذا جهازك يتحمل.
+          const scale = Math.max(EXPORT_SCALE, (EXPORT_WIDTH / previewArea.clientWidth));
+          const canvas = await html2canvas(previewArea, {
+            useCORS: true,
+            backgroundColor: null,
+            scale: scale
+          });
+
+          if (canvas.toBlob) {
+            canvas.toBlob((blob) => {
+              const link = document.createElement('a');
+              link.download = `partnership-template-${Date.now()}.png`;
+              link.href = URL.createObjectURL(blob);
+              document.body.appendChild(link);
+              link.click();
+              URL.revokeObjectURL(link.href);
+              link.remove();
+            }, 'image/png');
+          } else {
+            const link = document.createElement('a');
+            link.download = `partnership-template-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+          }
+        } catch (error) {
+          console.error('Export error:', error);
+          alert('حدث خطأ أثناء تصدير الصورة.');
+        } finally {
+          loadingOverlay.style.display = 'none';
+        }
+      });
+
+      loadInitialTemplate();
+    });
+  </script>
+</body>
+</html>
