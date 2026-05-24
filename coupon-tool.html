@@ -1421,7 +1421,7 @@ async function doExport(fn, msg='جاري التصدير...') {
 }
 
 D.btnPng.addEventListener('click', () => doExport(async () => {
-  const cv = await html2canvas(D.canvas, {scale:3,useCORS:true,backgroundColor:null,allowTaint:true});
+  const cv = await html2canvas(D.canvas, {scale:4,useCORS:true,backgroundColor:null,allowTaint:true});
   const a = document.createElement('a');
   a.download = `coupon-${Date.now()}.png`; a.href = cv.toDataURL('image/png'); a.click();
 }));
@@ -1431,8 +1431,8 @@ D.btnPdf.addEventListener('click', () => doExport(async () => {
   const isP = D.canvas.classList.contains('portrait');
   const w = D.canvas.offsetWidth, h = D.canvas.offsetHeight;
   const pdf = new jsPDF({orientation:isP?'p':'l',unit:'px',format:[w,h]});
-  const cv = await html2canvas(D.canvas, {scale:2,useCORS:true,backgroundColor:null,allowTaint:true});
-  pdf.addImage(cv.toDataURL('image/png'),'PNG',0,0,w,h);
+  const cv = await html2canvas(D.canvas, {scale:4,useCORS:true,backgroundColor:null,allowTaint:true});
+  pdf.addImage(cv.toDataURL('image/jpeg',0.96),'JPEG',0,0,w,h);
   pdf.save(`coupon-${Date.now()}.pdf`);
 }));
 
@@ -1499,9 +1499,9 @@ D.btnGenBatch.addEventListener('click', () => {
     for (let i=0; i<couponCodes.length; i++) {
       codeEl.textContent = couponCodes[i];
       await new Promise(r=>setTimeout(r,40));
-      const cv = await html2canvas(D.canvas,{scale:2,useCORS:true,backgroundColor:null,allowTaint:true});
+      const cv = await html2canvas(D.canvas,{scale:4,useCORS:true,backgroundColor:null,allowTaint:true});
       if (i>0) pdf.addPage([w,h],isP?'p':'l');
-      pdf.addImage(cv.toDataURL('image/png'),'PNG',0,0,w,h);
+      pdf.addImage(cv.toDataURL('image/jpeg',0.96),'JPEG',0,0,w,h);
     }
     pdf.save(`coupons-batch-${Date.now()}.pdf`);
     codeEl.textContent = orig;
