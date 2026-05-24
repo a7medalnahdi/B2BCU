@@ -615,19 +615,19 @@ input[type="file"]{display:none}
       <div class="canvas" id="canvas">
         <img class="canvas-bg" id="bgImg" src="https://i.ibb.co/dG0G2pB/coupon-bg-1.png" crossorigin="anonymous"/>
         <div id="mainText" data-name="النص الأساسي" class="movable selectable"
-             style="top:20%;left:50%;transform:translateX(-50%);font-size:30px;color:#111827;font-weight:700;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+             style="top:33.9%;left:54.7%;font-size:48px;color:#f96714;font-weight:900;text-align:center;direction:rtl;font-family:'LamaSans','Cairo',sans-serif">
           النص الأساسي
         </div>
         <div id="subText" data-name="النص الفرعي" class="movable selectable"
-             style="top:38%;left:50%;transform:translateX(-50%);font-size:18px;color:#374151;font-weight:400;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+             style="top:47%;left:78.4%;font-size:23px;color:#374151;font-weight:400;text-align:center;direction:rtl;font-family:'LamaSans','Cairo',sans-serif">
           النص الفرعي
         </div>
         <div id="codeText" data-name="كود الخصم" class="movable selectable"
-             style="top:54%;left:50%;transform:translateX(-50%);font-size:38px;color:#f96714;font-weight:900;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+             style="top:63.4%;left:58.3%;font-size:50px;color:#ffffff;font-weight:900;text-align:center;direction:ltr;font-family:'LamaSans','Cairo',sans-serif">
           CODE-123
         </div>
         <div id="termsText" data-name="الشروط والأحكام" class="movable selectable"
-             style="top:87%;left:50%;transform:translateX(-50%);font-size:11px;color:#6b7280;font-weight:400;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+             style="top:81.7%;left:63.8%;font-size:14px;color:#6b7280;font-weight:400;text-align:center;direction:rtl;font-family:'LamaSans','Cairo',sans-serif">
           الشروط والأحكام • تنتهي الصلاحية قريباً
         </div>
         <img id="logoPreview" data-name="الشعار" class="selectable" src="" alt=""/>
@@ -816,7 +816,7 @@ const Hist = (() => {
         textAlign: cs.textAlign, letterSpacing: cs.letterSpacing,
         lineHeight: cs.lineHeight, textShadow: cs.textShadow,
         backgroundColor: cs.backgroundColor, padding: el.style.padding,
-        borderRadius: el.style.borderRadius,
+        borderRadius: el.style.borderRadius, direction: el.style.direction,
       };
     });
     const lg = D.logo;
@@ -843,6 +843,7 @@ const Hist = (() => {
       el.style.letterSpacing = t.letterSpacing; el.style.lineHeight = t.lineHeight;
       el.style.textShadow = t.textShadow; el.style.backgroundColor = t.backgroundColor;
       el.style.padding = t.padding; el.style.borderRadius = t.borderRadius;
+      el.style.direction = t.direction || '';
     });
 
     const lg = D.logo, l = state.logo;
@@ -1125,6 +1126,8 @@ $$('[data-align]').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!activeEl) return;
     activeEl.style.textAlign = btn.dataset.align;
+    if (btn.dataset.align === 'right') activeEl.style.direction = 'rtl';
+    else if (btn.dataset.align === 'left') activeEl.style.direction = 'ltr';
     $$('[data-align]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     Hist.push();
@@ -1525,7 +1528,7 @@ function saveTemplate() {
       textAlign: cs.textAlign, letterSpacing: cs.letterSpacing,
       lineHeight: cs.lineHeight, textShadow: cs.textShadow,
       backgroundColor: cs.backgroundColor, padding: el.style.padding,
-      borderRadius: el.style.borderRadius,
+      borderRadius: el.style.borderRadius, direction: el.style.direction,
     };
   });
   if (D.logo.src && D.logo.style.display !== 'none') {
@@ -1551,7 +1554,7 @@ function applyTemplateData(data) {
     el.style.textAlign=t.textAlign; el.style.letterSpacing=t.letterSpacing;
     el.style.lineHeight=t.lineHeight; el.style.textShadow=t.textShadow;
     el.style.backgroundColor=t.backgroundColor; el.style.padding=t.padding;
-    el.style.borderRadius=t.borderRadius;
+    el.style.borderRadius=t.borderRadius; el.style.direction=t.direction||'';
   });
   if (data.logo) {
     D.logo.src=data.logo.src; D.logo.style.display='block';
