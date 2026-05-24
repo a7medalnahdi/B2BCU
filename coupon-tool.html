@@ -1,981 +1,1604 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>صانع الكوبونات - تصميم عصري جديد</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #f96714;
-            --primary-color-dark: #e05a12;
-            --secondary-color: #121212;
-            --text-light: #ffffff;
-            --tertiary-color: #64748b;
-            --success-color: #22c55e;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            --main-font: 'Cairo', sans-serif;
-        }
-        .dark-mode {
-            --primary-color: #fa7a30;
-            --primary-color-dark: #f96714;
-            --secondary-color: #e5e7eb;
-            --text-light: #e5e7eb;
-            --tertiary-color: #94a3b8;
-            --bg-color: #020617;
-            --card-bg: #1e293b;
-            --border-color: #334152;
-        }
-        * { box-sizing: border-box; margin:0; padding:0;}
-        body { 
-            font-family: var(--main-font); 
-            background: var(--bg-color); 
-            color: var(--secondary-color); 
-            transition: background-color 0.3s, color 0.3s; 
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow: hidden; /* Prevent body scroll */
-        }
-        .container { width: 100%; height:100vh; padding: 0; margin: 0; }
-        .top-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 24px; 
-            background-color: var(--card-bg); 
-            border-bottom: 1px solid var(--border-color);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-        }
-        .back-link {
-            font-size: 1rem;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .back-link:hover { text-decoration: underline; }
-        .top-bar .logo-container { flex: 1; text-align: right; }
-        .top-bar .logo { height: 40px; }
-        .top-bar .title { flex: 1; text-align: center; font-weight: 700; font-size: 1.2rem; color: var(--secondary-color); }
-        .top-bar .controls-container { flex: 1; display: flex; justify-content: flex-end; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>صانع الكوبونات</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<style>
+/* ===== FONTS ===== */
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Regular.woff2')format('woff2');font-weight:400}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Medium.woff2')format('woff2');font-weight:500}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-SemiBold.woff2')format('woff2');font-weight:600}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Bold.woff2')format('woff2');font-weight:700}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-ExtraBold.woff2')format('woff2');font-weight:800}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Black.woff2')format('woff2');font-weight:900}
 
-        .main-layout { display: flex; flex-direction: row; padding-top: 65px; height: 100%;}
-        
-        .left-panel {
-            width: 320px;
-            padding: 20px;
-            background-color: var(--card-bg);
-            border-left: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-        }
-        .center-panel {
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .right-panel {
-            width: 350px;
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--border-color);
-            padding: 20px;
-            overflow-y: auto;
-        }
+/* ===== TOKENS ===== */
+:root{
+  --accent:#f96714;--accent-d:#e05a0e;--accent-l:rgba(249,103,20,.12);--accent-g:rgba(249,103,20,.28);
+  --bg:#eef0f6;--surf:#fff;--surf2:#f5f6fb;--bdr:#e3e6ef;--bdr2:#ccd0de;
+  --t1:#111827;--t2:#6b7280;--t3:#9ca3af;
+  --ok:#16a34a;--ok-l:rgba(22,163,74,.1);
+  --err:#dc2626;--err-l:rgba(220,38,38,.1);
+  --info:#2563eb;--info-l:rgba(37,99,235,.1);
+  --warn:#d97706;--warn-l:rgba(217,119,6,.1);
+  --r:8px;--r2:12px;--r3:16px;
+  --sh1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh2:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+  --sh3:0 10px 28px rgba(0,0,0,.1),0 4px 10px rgba(0,0,0,.05);
+  --sha:0 4px 14px var(--accent-g);
+  --f:'LamaSans','Cairo',sans-serif;
+  --tr:.18s ease;
+}
+body.dark{
+  --bg:#0c1018;--surf:#151c28;--surf2:#1a2235;--bdr:#253045;--bdr2:#334060;
+  --t1:#e8ecf5;--t2:#8b95a8;--t3:#5a6478;
+  --sh1:0 1px 3px rgba(0,0,0,.35);--sh2:0 4px 12px rgba(0,0,0,.35);--sh3:0 10px 28px rgba(0,0,0,.45);
+}
 
-        .preview-wrapper {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .preview-container { 
-            width: 100%;
-            max-width: 800px;
-            padding: 16px; 
-            border-radius: var(--border-radius); 
-            background-color: var(--card-bg); 
-            box-shadow: var(--box-shadow); 
-            border: 1px solid var(--border-color);
-            transition: max-width 0.4s ease-in-out;
-        }
-        .preview-container.portrait-mode {
-             max-width: 450px; /* Constrain width in portrait */
-        }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);overflow:hidden;-webkit-font-smoothing:antialiased;transition:background var(--tr),color var(--tr)}
 
-        .preview {
-            position: relative;
-            border-radius: var(--border-radius);
-            width: 100%;
-            margin: 0 auto;
-            background-color: #e2e8f0;
-            aspect-ratio: 1.48 / 1.05; 
-            transition: aspect-ratio 0.4s ease-in-out;
-        }
-        .preview.portrait { aspect-ratio: 1.05 / 1.48; }
-        .preview img.bg { width: 100%; height: 100%; display: block; position: absolute; top: 0; left: 0; object-fit: cover; z-index: 1; border-radius: var(--border-radius); }
-        .overlay-text { position: absolute; cursor: pointer; user-select: none; padding: 5px 10px; border: 2px solid transparent; border-radius: 6px; z-index: 10; line-height: 1.4; transition: border-color 0.2s, opacity 0.3s; }
-        .movable-item { position: absolute; cursor: pointer; user-select: none; z-index: 10; }
-        .movable-item.active { outline: 2px solid var(--primary-color); z-index: 20; }
-        #logoPreview { width: 100px; height: auto; display: none; transition: opacity 0.2s; top: 5%; right: 5%; }
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:56px;
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;padding:0 16px;gap:10px;z-index:200;box-shadow:var(--sh1)
+}
+.topbar-back{display:flex;align-items:center;gap:5px;color:var(--t2);text-decoration:none;
+  font-size:.82rem;font-weight:600;padding:5px 9px;border-radius:var(--r);transition:all var(--tr)}
+.topbar-back:hover{background:var(--surf2);color:var(--t1)}
+.topbar-div{width:1px;height:24px;background:var(--bdr);flex-shrink:0}
+.topbar-title{font-size:.9rem;font-weight:700;color:var(--t1);flex:1;text-align:center}
+.topbar-end{display:flex;align-items:center;gap:8px}
 
-        .section-title { font-size: 1rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .property-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .mode-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; padding: 4px; background-color: var(--bg-color); border-radius: var(--border-radius); }
-        .mode-btn { background-color: transparent; border: none; padding: 10px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; color: var(--tertiary-color); transition: all 0.3s; display:flex; align-items:center; justify-content:center; gap: 8px;}
-        .mode-btn.active { background-color: var(--card-bg); color: var(--primary-color); box-shadow: var(--box-shadow); }
-        
-        .control-group { margin-bottom: 20px; }
-        .control-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--secondary-color); }
-        .control-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin-top: 12px; }
-        input[type="text"], textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--border-radius); font-size: 0.9rem; background: var(--bg-color); color: var(--secondary-color); font-family: var(--main-font); transition: all 0.2s; }
-        input:focus, textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(249, 103, 20, 0.2); }
-        .dark-mode input:focus, .dark-mode textarea:focus { box-shadow: 0 0 0 3px rgba(250, 122, 48, 0.3); }
-        .btn-group { display: flex; gap: 8px; }
-        .btn-icon { background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--tertiary-color); transition: all 0.2s; }
-        .btn-icon:hover { color: var(--secondary-color); border-color: var(--tertiary-color); }
-        .btn-icon.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-        .color-selector-group { display: flex; gap: 10px; }
-        .color-selector-group .color-btn { height: 32px; width: 32px; flex-grow: 1; border-radius: 6px;}
-        .color-btn.active { box-shadow: 0 0 0 3px var(--primary-color); transform: scale(1.1); }
-        .color-btn[data-color="#ffffff"] { border: 1px solid #ddd; }
-        
-        .slider-control { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-        .slider-control label { font-size: 0.9rem; color: var(--tertiary-color); margin-bottom:0; }
-        .slider-control span { min-width: 40px; text-align: right; font-size: 0.9rem; font-weight: 600; }
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            background: var(--border-color);
-            border-radius: 5px;
-            outline: none;
-            opacity: 0.7;
-            transition: opacity .2s;
-        }
-        input[type="range"]:hover { opacity: 1; }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--primary-color);
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: var(--primary-color);
-            cursor: pointer;
-            border-radius: 50%;
-            border: none;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        }
+/* History buttons */
+.hist-btn{
+  width:32px;height:32px;border-radius:var(--r);border:1px solid var(--bdr);
+  background:var(--surf2);color:var(--t2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;
+  transition:all var(--tr)
+}
+.hist-btn:hover:not(:disabled){background:var(--bdr);color:var(--t1)}
+.hist-btn:disabled{opacity:.35;cursor:not-allowed}
 
-        .file-label, .btn { cursor: pointer; background: var(--primary-color); color: #fff; border: none; border-radius: var(--border-radius); padding: 12px 16px; font-size:0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; text-align: center; width: 100%; transition: all 0.2s; }
-        .file-label:hover, .btn:hover { background: var(--primary-color-dark); transform: translateY(-2px); box-shadow: 0 7px 10px -3px rgb(0 0 0 / 0.1); }
-        .file-label:active, .btn:active { transform: translateY(0); box-shadow: none; }
-        input[type="file"] { display: none; }
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 24, 39, 0.6); color: white; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 15px; z-index: 2000; backdrop-filter: blur(4px); }
-        .loader { border: 5px solid #4b5563; border-top: 5px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .tool-group { margin-top: 24px; }
-        .templates-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
-        .template-thumb { width: 100%; border-radius: var(--border-radius); border: 2px solid var(--border-color); cursor: pointer; transition: all 0.2s ease-in-out; object-fit: cover; }
-        #landscape-templates .template-thumb { aspect-ratio: 1.48 / 1.05; }
-        #portrait-templates .template-thumb { aspect-ratio: 1.05 / 1.48; }
-        .template-thumb:hover { border-color: var(--tertiary-color); transform: scale(1.05); }
-        .template-thumb.active { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-color); transform: scale(1.05); }
-        
-        .property-panel { display: none; }
-        .property-panel.active { display: block; }
-        #properties-placeholder { text-align: center; color: var(--tertiary-color); padding-top: 40px;}
-        #properties-placeholder i { font-size: 3rem; margin-bottom: 1rem; }
-        
-        #notification-container { position: fixed; bottom: 20px; left: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
-        .toast { display: flex; align-items: center; padding: 15px 20px; border-radius: var(--border-radius); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); color: white; min-width: 320px; opacity: 0; transform: translateX(-120%); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        .toast.show { opacity: 1; transform: translateX(0); }
-        .toast.hide { opacity: 0; visibility: hidden; transform: translateX(-120%);}
-        .toast i.fa-solid { font-size: 1.5rem; margin-left: 15px; }
-        .toast .toast-content { flex-grow: 1; }
-        .toast .toast-title { font-weight: 700; font-size: 1rem; }
-        .toast .toast-message { font-size: 0.9rem; opacity: 0.9; }
-        .toast.success { background-color: var(--success-color); }
-        .toast.error { background-color: var(--danger-color); }
-        .toast.warning { background-color: var(--primary-color); }
-        .toast .close-btn { background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem; padding: 0 5px; opacity: 0.7; transition: opacity 0.2s; }
-        .toast .close-btn:hover { opacity: 1; }
-        
-        .theme-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
-        .theme-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        input:checked + .slider { background-color: var(--primary-color); }
-        input:checked + .slider:before { transform: translateX(26px); }
-        .slider .sun-icon, .slider .moon-icon { position: absolute; top: 50%; transform: translateY(-50%); color: var(--primary-color); transition: opacity 0.4s; }
-        .slider .sun-icon { left: 8px; opacity: 1; }
-        .slider .moon-icon { right: 8px; opacity: 0; }
-        input:checked + .slider .sun-icon { opacity: 0; }
-        input:checked + .slider .moon-icon { opacity: 1; color: white; }
+/* Theme */
+.theme-wrap{display:flex;align-items:center;gap:6px}
+.theme-ico{font-size:.78rem;color:var(--t3)}
+.toggle-sw{
+  position:relative;width:40px;height:22px;
+  background:var(--bdr2);border:none;border-radius:100px;cursor:pointer;
+  transition:background var(--tr);flex-shrink:0
+}
+.toggle-sw.on{background:var(--accent)}
+.toggle-sw::after{
+  content:'';position:absolute;top:3px;right:3px;
+  width:16px;height:16px;background:#fff;border-radius:50%;
+  transition:transform var(--tr);box-shadow:var(--sh1)
+}
+.toggle-sw.on::after{transform:translateX(-18px)}
 
-        /* === CSS FOR SAVED TEMPLATES === */
-        .saved-template-wrapper {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        .delete-template-btn {
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            width: 24px;
-            height: 24px;
-            background-color: var(--danger-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            z-index: 15;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .saved-template-wrapper:hover .delete-template-btn {
-            opacity: 1;
-        }
-        .saved-templates-section {
-            background-color: var(--bg-color);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-            border: 1px solid var(--border-color);
-        }
-        .saved-templates-section .control-group {
-            margin-bottom: 0;
-        }
-        .saved-templates-section .template-thumb {
-            border-width: 3px;
-            border-color: var(--tertiary-color);
-        }
-        .dark-mode .saved-templates-section .template-thumb {
-             border-color: #4a5568;
-        }
-        .template-name-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--secondary-color);
-            text-align: center;
-            margin-top: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 0 4px;
-        }
-        /* === END OF CSS === */
-    </style>
+/* ===== LAYOUT ===== */
+.layout{display:flex;height:100vh;padding-top:56px}
+
+/* ===== PANELS ===== */
+.panel{background:var(--surf);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--bdr) transparent}
+.panel::-webkit-scrollbar{width:3px}
+.panel::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:4px}
+.panel-right{width:288px;border-left:1px solid var(--bdr);flex-shrink:0}
+.panel-left{width:284px;border-right:1px solid var(--bdr);flex-shrink:0}
+.panel-center{flex:1;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+
+/* Panel sections */
+.psec{padding:14px;border-bottom:1px solid var(--bdr)}
+.psec:last-child{border-bottom:none}
+.sec-lbl{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+
+/* ===== SEGMENTED ===== */
+.seg{display:flex;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:2px;gap:2px}
+.seg-btn{
+  flex:1;background:transparent;border:none;border-radius:6px;
+  padding:6px 6px;font-size:.8rem;font-weight:600;font-family:var(--f);
+  color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:all var(--tr);white-space:nowrap
+}
+.seg-btn.active,.seg-btn:not(.icon-seg):hover{background:var(--surf);color:var(--accent);box-shadow:var(--sh1)}
+.seg-btn i{font-size:.75rem;pointer-events:none}
+.seg-btn.active i{color:var(--accent)}
+
+/* ===== FIELDS ===== */
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.f-lbl{display:block;font-size:.76rem;font-weight:600;color:var(--t2);margin-bottom:6px}
+
+input[type="text"],textarea,input[type="number"]{
+  width:100%;padding:8px 10px;
+  background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);
+  font-size:.85rem;font-family:var(--f);color:var(--t1);transition:all var(--tr);resize:none
+}
+input[type="text"]:focus,textarea:focus,input[type="number"]:focus{
+  outline:none;border-color:var(--accent);background:var(--surf);box-shadow:0 0 0 3px var(--accent-l)
+}
+input[type="number"]{text-align:center;-moz-appearance:textfield}
+input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* Slider */
+.sl-row{display:flex;align-items:center;gap:8px}
+.sl-val{
+  font-size:.75rem;font-weight:700;color:var(--accent);
+  min-width:40px;text-align:center;background:var(--accent-l);
+  padding:2px 5px;border-radius:6px;flex-shrink:0
+}
+input[type="range"]{
+  -webkit-appearance:none;flex:1;height:4px;
+  background:var(--bdr2);border-radius:4px;outline:none
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:15px;height:15px;
+  background:var(--accent);border-radius:50%;cursor:pointer;
+  box-shadow:0 0 0 3px var(--accent-l)
+}
+input[type="range"]::-moz-range-thumb{
+  width:15px;height:15px;background:var(--accent);border-radius:50%;border:none;cursor:pointer
+}
+
+/* Colors */
+.swatches{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.swatch{
+  width:26px;height:26px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;transition:all var(--tr);flex-shrink:0;position:relative
+}
+.swatch:hover{transform:scale(1.18)}
+.swatch.active{box-shadow:0 0 0 2px var(--surf),0 0 0 4px var(--accent)}
+.swatch[data-color="#ffffff"]{border-color:var(--bdr2)}
+.swatch-none{
+  background:var(--surf2)!important;border-color:var(--bdr2)!important;
+  display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:.65rem
+}
+.swatch-none.active{box-shadow:0 0 0 2px var(--surf),0 0 0 4px var(--t3)}
+.swatch-picker{
+  width:26px;height:26px;border-radius:50%;border:2px dashed var(--bdr2);
+  background:var(--surf2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--t3);font-size:.65rem;transition:all var(--tr);flex-shrink:0;position:relative;overflow:hidden
+}
+.swatch-picker:hover{border-color:var(--accent);color:var(--accent)}
+.swatch-picker input[type="color"]{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0
+}
+
+/* On/off toggle inline */
+.sw-row{display:flex;align-items:center;justify-content:space-between}
+.sw-lbl{font-size:.8rem;font-weight:600;color:var(--t2)}
+.sw-small{width:34px;height:19px;background:var(--bdr2);border:none;border-radius:100px;cursor:pointer;transition:background var(--tr);position:relative;flex-shrink:0}
+.sw-small.on{background:var(--accent)}
+.sw-small::after{content:'';position:absolute;top:2.5px;right:2.5px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform var(--tr);box-shadow:var(--sh1)}
+.sw-small.on::after{transform:translateX(-15px)}
+
+/* ===== POSITION GRID ===== */
+.xy-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.xy-field{}
+.xy-field .f-lbl{text-align:center;font-size:.72rem}
+.xy-field input{text-align:center;font-weight:700;font-size:.85rem}
+
+/* Center buttons */
+.center-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.center-grid .btn{font-size:.75rem;padding:7px 6px}
+.center-full{grid-column:1/-1}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 14px;border-radius:var(--r);border:none;
+  font-family:var(--f);font-size:.82rem;font-weight:700;cursor:pointer;
+  transition:all var(--tr);white-space:nowrap
+}
+.btn-full{width:100%}
+.btn-sm{padding:7px 12px;font-size:.78rem}
+.btn-xs{padding:5px 9px;font-size:.73rem}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:var(--sha)}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-1px)}
+.btn-success{background:var(--ok);color:#fff}
+.btn-success:hover{opacity:.9;transform:translateY(-1px)}
+.btn-danger{background:var(--err);color:#fff}
+.btn-danger:hover{opacity:.9;transform:translateY(-1px)}
+.btn-info{background:var(--info);color:#fff}
+.btn-info:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:var(--surf2);color:var(--t2);border:1px solid var(--bdr)}
+.btn-ghost:hover{background:var(--bdr);color:var(--t1)}
+.btn-ghost.active-lock{background:var(--warn-l);color:var(--warn);border-color:var(--warn)}
+
+.file-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 10px;border-radius:var(--r);
+  background:var(--surf2);border:1.5px dashed var(--bdr2);
+  color:var(--t2);font-family:var(--f);font-size:.8rem;font-weight:600;
+  cursor:pointer;transition:all var(--tr)
+}
+.file-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-l)}
+input[type="file"]{display:none}
+.btn-row{display:flex;gap:7px}
+.btn-row>*{flex:1}
+
+/* ===== PROP PANEL ===== */
+.prop-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:200px;padding:30px 20px;text-align:center;color:var(--t3)
+}
+.prop-placeholder i{font-size:2rem;opacity:.3;margin-bottom:10px}
+.prop-placeholder p{font-size:.82rem;line-height:1.7;font-weight:500}
+.prop-panel{display:none}
+.prop-panel.active{display:block}
+
+/* Prop header */
+.prop-hdr{
+  padding:13px 14px;border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;gap:9px;
+  position:sticky;top:0;background:var(--surf);z-index:10
+}
+.prop-hdr-ico{
+  width:30px;height:30px;border-radius:var(--r);background:var(--accent-l);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0
+}
+.prop-hdr-info{flex:1;min-width:0}
+.prop-hdr-name{font-size:.83rem;font-weight:700;color:var(--t1);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prop-hdr-sub{font-size:.7rem;color:var(--t3);margin-top:1px}
+.prop-hdr-actions{display:flex;gap:5px;flex-shrink:0}
+.lock-btn{
+  width:28px;height:28px;border-radius:var(--r);border:1px solid var(--bdr);
+  background:var(--surf2);color:var(--t3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  transition:all var(--tr)
+}
+.lock-btn.locked{background:var(--warn-l);color:var(--warn);border-color:var(--warn)}
+.lock-btn:hover{border-color:var(--t2);color:var(--t2)}
+
+/* ===== CANVAS ===== */
+.canvas-wrap{
+  width:100%;max-width:820px;
+  background:var(--surf);border-radius:var(--r3);
+  padding:18px;box-shadow:var(--sh3);border:1px solid var(--bdr);
+  transition:max-width .35s ease
+}
+.canvas-wrap.portrait-mode{max-width:420px}
+.canvas{
+  position:relative;width:100%;border-radius:var(--r2);
+  background:var(--bdr);overflow:hidden;
+  aspect-ratio:1.48/1.05;transition:aspect-ratio .35s ease
+}
+.canvas.portrait{aspect-ratio:1.05/1.48}
+.canvas-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+
+/* ===== MOVABLE ELEMENTS ===== */
+.movable{
+  position:absolute;cursor:grab;user-select:none;z-index:10;
+  padding:3px 7px;border-radius:5px;
+  border:1.5px solid transparent;line-height:1.3;
+  transition:border-color .12s;
+}
+.movable:hover:not(.locked-el){border-color:rgba(249,103,20,.35)}
+.movable.selected{border-color:var(--accent)!important;cursor:grabbing;z-index:20}
+.movable.locked-el{cursor:not-allowed!important}
+.movable.locked-el:hover{border-color:rgba(217,119,6,.4)}
+#logoPreview{
+  position:absolute;z-index:10;cursor:grab;user-select:none;
+  width:90px;height:auto;display:none;top:5%;right:5%
+}
+#logoPreview.selected{outline:2px solid var(--accent);outline-offset:2px;cursor:grabbing;z-index:20}
+#logoPreview.locked-el{cursor:not-allowed}
+
+/* ===== TEMPLATES ===== */
+.tpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.tpl{width:100%;border-radius:var(--r);border:2px solid var(--bdr);cursor:pointer;
+  transition:all var(--tr);object-fit:cover;display:block}
+.tpl.ls{aspect-ratio:1.48/1.05}
+.tpl.pt{aspect-ratio:1.05/1.48}
+.tpl:hover{border-color:var(--t3);transform:scale(1.04)}
+.tpl.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-l)}
+
+/* Saved templates */
+.stpl-wrap{position:relative;display:flex;flex-direction:column}
+.stpl-del{
+  position:absolute;top:-5px;left:-5px;width:18px;height:18px;
+  background:var(--err);color:#fff;border:none;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.6rem;
+  z-index:10;opacity:0;transition:opacity var(--tr)
+}
+.stpl-wrap:hover .stpl-del{opacity:1}
+.stpl-name{font-size:.7rem;font-weight:600;color:var(--t2);text-align:center;margin-top:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Batch upload */
+.upload-zone{
+  border:2px dashed var(--bdr2);border-radius:var(--r2);padding:22px 14px;text-align:center;
+  cursor:pointer;transition:all var(--tr);background:var(--surf2)
+}
+.upload-zone:hover,.upload-zone:focus-within{border-color:var(--accent);background:var(--accent-l)}
+.upload-zone.has-file{border-color:var(--ok);background:var(--ok-l)}
+.upload-zone i{font-size:1.6rem;color:var(--t3);margin-bottom:9px;display:block}
+.upload-zone.has-file i{color:var(--ok)}
+.upload-zone p{font-size:.8rem;color:var(--t2);font-weight:600}
+.upload-zone.has-file p{color:var(--ok)}
+.upload-zone small{font-size:.72rem;color:var(--t3);display:block;margin-top:3px}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:.7rem;font-weight:700}
+.badge-ok{background:var(--ok-l);color:var(--ok)}
+.badge-accent{background:var(--accent-l);color:var(--accent)}
+
+/* ===== LOADING ===== */
+.loading{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:1000
+}
+.loading.show{display:flex}
+.spinner{width:42px;height:42px;border:3px solid rgba(255,255,255,.15);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:#fff;font-size:.88rem;font-weight:600;opacity:.9}
+
+/* ===== TOASTS ===== */
+.toasts{position:fixed;bottom:18px;left:18px;z-index:2000;display:flex;flex-direction:column;gap:7px}
+.toast{
+  display:flex;align-items:flex-start;gap:9px;padding:11px 14px;
+  border-radius:var(--r2);box-shadow:var(--sh3);min-width:260px;max-width:340px;
+  background:var(--surf);border:1px solid var(--bdr);
+  opacity:0;transform:translateY(10px);transition:all .28s cubic-bezier(.34,1.56,.64,1)
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.hide{opacity:0;transform:translateY(10px)}
+.toast-ico{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+.toast-body{flex:1}
+.toast-ttl{font-size:.82rem;font-weight:700;color:var(--t1)}
+.toast-msg{font-size:.76rem;color:var(--t2);margin-top:2px;line-height:1.4}
+.toast-x{background:none;border:none;cursor:pointer;color:var(--t3);font-size:.95rem;padding:0;flex-shrink:0;transition:color var(--tr)}
+.toast-x:hover{color:var(--t1)}
+.toast.ok .toast-ico{background:var(--ok-l);color:var(--ok)}
+.toast.err .toast-ico{background:var(--err-l);color:var(--err)}
+.toast.wrn .toast-ico{background:var(--warn-l);color:var(--warn)}
+
+/* Separator */
+.sep{height:1px;background:var(--bdr);margin:0}
+.empty-st{text-align:center;color:var(--t3);font-size:.78rem;padding:10px 0;grid-column:1/-1}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+
+/* Shadow preview */
+.shadow-intensity{display:none}
+.shadow-intensity.show{display:block}
+</style>
 </head>
 <body>
-    <div class="top-bar">
-        <a href="./index.html" class="back-link">&larr; العودة للرئيسية</a>
-        <div class="title"> أداة تصدير الكوبونات </div>
-        <div class="controls-container">
-            <label class="theme-switch">
-                <input type="checkbox" id="themeToggleCheckbox">
-                <span class="slider round">
-                     <i class="fa-solid fa-sun sun-icon"></i>
-                     <i class="fa-solid fa-moon moon-icon"></i>
-                </span>
-            </label>
-        </div>
+
+<!-- ===== TOPBAR ===== -->
+<header class="topbar">
+  <a href="./index.html" class="topbar-back"><i class="fa-solid fa-arrow-right"></i> العودة</a>
+  <div class="topbar-div"></div>
+  <button class="hist-btn" id="btnUndo" title="تراجع (Ctrl+Z)" disabled>
+    <i class="fa-solid fa-rotate-left"></i>
+  </button>
+  <button class="hist-btn" id="btnRedo" title="إعادة (Ctrl+Y)" disabled>
+    <i class="fa-solid fa-rotate-right"></i>
+  </button>
+  <div class="topbar-div"></div>
+  <div class="topbar-title">صانع الكوبونات</div>
+  <div class="topbar-end">
+    <div class="theme-wrap">
+      <i class="fa-solid fa-sun theme-ico"></i>
+      <button class="toggle-sw" id="themeToggle" title="الوضع المظلم"></button>
+      <i class="fa-solid fa-moon theme-ico"></i>
+    </div>
+  </div>
+</header>
+
+<!-- ===== LAYOUT ===== -->
+<div class="layout">
+
+  <!-- RIGHT: Inspector -->
+  <aside class="panel panel-right" id="inspector">
+
+    <!-- Placeholder -->
+    <div class="prop-placeholder" id="propsPlaceholder">
+      <i class="fa-regular fa-hand-pointer"></i>
+      <p>انقر على أي عنصر<br>في التصميم لتعديله</p>
     </div>
 
-    <div class="container">
-        <div class="main-layout">
-            <div class="right-panel" id="propertiesInspector">
-                <div id="properties-placeholder">
-                    <i class="fa-solid fa-hand-pointer"></i>
-                    <p>اختر عنصراً لتعديله</p>
-                </div>
+    <!-- ====== TEXT PANEL ====== -->
+    <div class="prop-panel" id="textPanel">
 
-                <div id="text-properties" class="property-panel">
-                    <h3 id="property-title-text" class="property-title"></h3>
-                    <div class="control-group">
-                        <label for="text-input">المحتوى</label>
-                        <textarea id="text-input" rows="2"></textarea>
-                    </div>
-                    <div class="control-group">
-                         <label>اللون</label>
-                         <div class="color-selector-group" id="text-color-selector">
-                            <button class="btn-icon color-btn" data-color="#121212" style="background-color:#121212;"></button>
-                            <button class="btn-icon color-btn" data-color="#ffffff" style="background-color:#ffffff;"></button>
-                            <button class="btn-icon color-btn" data-color="#f96714" style="background-color:#f96714;"></button>
-                         </div>
-                    </div>
-                     <div class="control-group">
-                        <label>الحجم والوزن</label>
-                        <div class="slider-control"><input type="range" class="font-size-slider" min="8" max="120"><span class="font-size-value"></span></div>
-                        <div class="control-row" style="margin-top: 15px;">
-                            <label>خط عريض</label>
-                            <button class="btn-icon bold-toggle-btn" title="خط عريض"><i class="fa-solid fa-bold"></i></button>
-                        </div>
-                     </div>
-                </div>
-
-                 <div id="logo-properties" class="property-panel">
-                    <h3 class="property-title">خصائص الشعار</h3>
-                    <div class="control-group">
-                        <div class="slider-control"><label>الحجم</label><input type="range" id="logoSizeSlider" min="20" max="300"><span id="logoSizeValue"></span></div>
-                    </div>
-                     <div class="tool-group">
-                         <button class="btn" id="removeLogoBtn" style="background-color: var(--danger-color);"><i class="fa-solid fa-trash"></i>&nbsp;حذف الشعار</button>
-                     </div>
-                </div>
-            </div>
-            
-            <div class="center-panel">
-                <div class="preview-wrapper">
-                     <div class="preview-container">
-                        <div class="preview" id="previewArea">
-                            <img id="backgroundImage" class="bg" src="https://i.ibb.co/dG0G2pB/coupon-bg-1.png"/>
-                            <div id="mainText" data-name="النص الأساسي" data-centered="true" class="overlay-text movable-item selectable" style="top: 20%; left: 50%; transform: translateX(-50%); font-size: 32px; color: #121212; font-family: var(--main-font); font-weight: 700; text-align: center;">النص الأساسي</div>
-                            <div id="subText" data-name="النص الفرعي" data-centered="true" class="overlay-text movable-item selectable" style="top: 38%; left: 50%; transform: translateX(-50%); font-size: 20px; color: #121212; font-family: var(--main-font); font-weight: 400; text-align: center;">النص الفرعي</div>
-                            <div id="codeText" data-name="الكود" data-centered="true" class="overlay-text movable-item selectable" style="top: 55%; left: 50%; transform: translateX(-50%); font-size: 40px; color: var(--primary-color); font-family: var(--main-font); font-weight: 800; text-align: center;">CODE-123</div>
-                            <div id="termsText" data-name="الشروط والأحكام" data-centered="true" class="overlay-text movable-item selectable" style="top: 88%; left: 50%; transform: translateX(-50%); font-size: 12px; color: #6b7280; font-family: var(--main-font); font-weight: 400; text-align: center;">الشروط والأحكام</div>
-                            <img id="logoPreview" data-name="الشعار" class="movable-item selectable" src="" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="left-panel">
-                 <div class="mode-switcher">
-                    <button id="show-single" class="mode-btn active">كوبون فردي</button>
-                    <button id="show-batch" class="mode-btn">مجموعة كوبونات</button>
-                </div>
-
-                <div id="single-designer-panel">
-                    <div class="control-group">
-                        <label>الخلفية والشعار</label>
-                        <div style="display:flex; gap:12px;">
-                            <label class="file-label" style="flex:1;"><input type="file" id="backgroundUpload" accept="image/*"><i class="fa-solid fa-image"></i> الخلفية</label>
-                            <label class="file-label" style="flex:1;"><input type="file" id="logoUpload" accept="image/*"><i class="fa-solid fa-upload"></i> الشعار</label>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label>اتجاه التصميم (A6)</label>
-                        <div class="mode-switcher" style="margin-bottom:0;">
-                            <button id="orientation-landscape" class="mode-btn active"><i class="fa-solid fa-arrows-left-right-to-line"></i>&nbsp;عرضي</button>
-                            <button id="orientation-portrait" class="mode-btn"><i class="fa-solid fa-arrows-up-down"></i>&nbsp;طولي</button>
-                        </div>
-                   </div>
-                    <div class="control-group">
-                        <label id="templates-section-title">قوالب عرضية</label>
-                        <div id="landscape-templates" class="templates-grid-container"></div>
-                        <div id="portrait-templates" class="templates-grid-container" style="display: none;"></div>
-                    </div>
-                     <div class="tool-group">
-                        <label>تصدير الكوبون الحالي</label>
-                        <div style="display:flex; gap:12px;">
-                             <button class="btn" id="downloadPngBtn" style="background-color: var(--success-color); flex: 1;"><i class="fa-solid fa-file-image"></i> PNG</button>
-                             <button class="btn" id="downloadPdfBtn" style="background-color: var(--danger-color); flex: 1;"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                        </div>
-                     </div>
-                     <div class="tool-group">
-                        <label>حفظ التصميم الحالي</label>
-                        <button class="btn" id="saveTemplateBtn" style="background-color: #3b82f6;"><i class="fa-solid fa-save"></i> حفظ كقالب جديد</button>
-                    </div>
-                    <div class="saved-templates-section">
-                        <div class="control-group">
-                            <label>قوالبي المحفوظة</label>
-                            <div id="saved-templates-container" class="templates-grid-container">
-                                <p id="no-saved-templates" style="color: var(--tertiary-color); font-size: 0.9rem; grid-column: 1 / -1;">لا توجد قوالب محفوظة بعد.</p>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-
-                <div id="batch-producer-panel" style="display: none;">
-                    <div class="section-title">إنتاج مجموعة كوبونات</div>
-                     <p style="font-size:0.85rem; color: var(--tertiary-color); margin-bottom:15px; line-height:1.6;">
-                        <b>ملاحظة:</b> سيتم استخدام التصميم الحالي كقالب لجميع الكوبونات.
-                     </p>
-                    <div class="tool-group">
-                        <label class="file-label" style="background-color: var(--primary-color);"><input type="file" id="batchFileUpload" accept=".xlsx, .xls, .csv"><i class="fa-solid fa-file-excel"></i> <span id="fileName">اختر ملف الأكواد</span></label>
-                         <p style="font-size:0.8rem; color: var(--tertiary-color); margin-top:8px;">(ملف Excel أو CSV بعمود واحد)</p>
-                    </div>
-                    <div class="tool-group">
-                        <button class="btn" id="generatePdfBtn" style="background-color: var(--success-color);"><i class="fa-solid fa-file-pdf"></i> إنشاء وتصدير PDF</button>
-                    </div>
-                </div>
-            </div>
+      <div class="prop-hdr">
+        <div class="prop-hdr-ico"><i class="fa-solid fa-font"></i></div>
+        <div class="prop-hdr-info">
+          <div class="prop-hdr-name" id="propName">النص</div>
+          <div class="prop-hdr-sub">اضغط واسحب لتحريكه</div>
         </div>
+        <div class="prop-hdr-actions">
+          <button class="lock-btn" id="lockBtn" title="قفل الموضع">
+            <i class="fa-solid fa-lock-open" id="lockIco"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="psec">
+        <div class="sec-lbl">المحتوى</div>
+        <textarea id="textInput" rows="3" placeholder="اكتب هنا..."></textarea>
+      </div>
+
+      <!-- Typography -->
+      <div class="psec">
+        <div class="sec-lbl">الطباعة</div>
+
+        <div class="field">
+          <label class="f-lbl">حجم الخط</label>
+          <div class="sl-row">
+            <input type="range" id="fontSzSl" min="8" max="120" value="24">
+            <span class="sl-val" id="fontSzVal">24px</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-lbl">الوزن</label>
+          <div class="seg">
+            <button class="seg-btn" data-fw="400">عادي</button>
+            <button class="seg-btn" data-fw="600">نصف عريض</button>
+            <button class="seg-btn" data-fw="900">أثقل</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-lbl">المحاذاة</label>
+          <div class="seg">
+            <button class="seg-btn icon-seg" data-align="right" title="يمين"><i class="fa-solid fa-align-right"></i></button>
+            <button class="seg-btn icon-seg" data-align="center" title="وسط"><i class="fa-solid fa-align-center"></i></button>
+            <button class="seg-btn icon-seg" data-align="left" title="يسار"><i class="fa-solid fa-align-left"></i></button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-lbl">تباعد الأحرف</label>
+          <div class="sl-row">
+            <input type="range" id="lspaceSl" min="-2" max="15" step="0.5" value="0">
+            <span class="sl-val" id="lspaceVal">0</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-lbl">تباعد السطور</label>
+          <div class="sl-row">
+            <input type="range" id="lhSl" min="0.8" max="3.5" step="0.1" value="1.3">
+            <span class="sl-val" id="lhVal">1.3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color & Effects -->
+      <div class="psec">
+        <div class="sec-lbl">اللون والتأثيرات</div>
+
+        <div class="field">
+          <label class="f-lbl">لون النص</label>
+          <div class="swatches" id="textColSwatches">
+            <button class="swatch" data-color="#111827" style="background:#111827" title="أسود"></button>
+            <button class="swatch" data-color="#ffffff" style="background:#ffffff" title="أبيض"></button>
+            <button class="swatch" data-color="#f96714" style="background:#f96714" title="برتقالي"></button>
+            <button class="swatch" data-color="#2563eb" style="background:#2563eb" title="أزرق"></button>
+            <button class="swatch" data-color="#16a34a" style="background:#16a34a" title="أخضر"></button>
+            <button class="swatch" data-color="#dc2626" style="background:#dc2626" title="أحمر"></button>
+            <button class="swatch" data-color="#9333ea" style="background:#9333ea" title="بنفسجي"></button>
+            <button class="swatch" data-color="#fbbf24" style="background:#fbbf24" title="أصفر"></button>
+            <div class="swatch-picker" title="لون مخصص">
+              <i class="fa-solid fa-plus"></i>
+              <input type="color" id="textColPicker" value="#f96714">
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="f-lbl">خلفية النص</label>
+          <div class="swatches" id="bgColSwatches">
+            <button class="swatch swatch-none active" data-bg="transparent" title="بدون"><i class="fa-solid fa-ban"></i></button>
+            <button class="swatch" data-bg="rgba(0,0,0,0.55)" style="background:#000" title="أسود شفاف"></button>
+            <button class="swatch" data-bg="rgba(255,255,255,0.75)" style="background:#fff;border:1px solid #ddd" title="أبيض شفاف"></button>
+            <button class="swatch" data-bg="rgba(249,103,20,0.2)" style="background:#f96714" title="برتقالي شفاف"></button>
+            <button class="swatch" data-bg="rgba(37,99,235,0.2)" style="background:#2563eb" title="أزرق شفاف"></button>
+            <button class="swatch" data-bg="rgba(22,163,74,0.2)" style="background:#16a34a" title="أخضر شفاف"></button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="sw-row">
+            <span class="sw-lbl">ظل النص</span>
+            <button class="sw-small" id="shadowSw" title="ظل النص"></button>
+          </div>
+        </div>
+
+        <div class="field shadow-intensity" id="shadowIntWrap">
+          <label class="f-lbl">حدة الظل</label>
+          <div class="sl-row">
+            <input type="range" id="shadowIntSl" min="1" max="20" value="6" step="1">
+            <span class="sl-val" id="shadowIntVal">6</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Position -->
+      <div class="psec">
+        <div class="sec-lbl">الموضع</div>
+        <div class="xy-grid">
+          <div class="xy-field">
+            <label class="f-lbl">X %</label>
+            <input type="number" id="posX" min="0" max="100" step="0.5">
+          </div>
+          <div class="xy-field">
+            <label class="f-lbl">Y %</label>
+            <input type="number" id="posY" min="0" max="100" step="0.5">
+          </div>
+        </div>
+        <div class="center-grid">
+          <button class="btn btn-ghost btn-sm" id="ctrH" title="توسيط أفقي">
+            <i class="fa-solid fa-arrows-left-right"></i> أفقي
+          </button>
+          <button class="btn btn-ghost btn-sm" id="ctrV" title="توسيط عمودي">
+            <i class="fa-solid fa-arrows-up-down"></i> عمودي
+          </button>
+          <button class="btn btn-ghost btn-sm center-full" id="ctrBoth" title="توسيط الاثنين">
+            <i class="fa-solid fa-crosshairs"></i> توسيط الاثنين
+          </button>
+        </div>
+      </div>
     </div>
-    
-    <div id="loadingOverlay" class="loading-overlay"><div class="loader"></div><p>جاري إنشاء الكوبونات...</p></div>
-    <div id="notification-container"></div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
 
-        const templates = {
-            landscape: [
-                { id: 'l1', thumb: 'https://i.ibb.co/MkCmHfJT/fdsfsd.png', full: 'https://i.ibb.co/MkCmHfJT/fdsfsd.png' },
-                { id: 'l2', thumb: 'https://i.ibb.co/MkCmHfJT/fdsfsd.png', full: 'https://i.ibb.co/MkCmHfJT/fdsfsd.png' },
-                { id: 'l3', thumb: 'https://i.ibb.co/MkCmHfJT/fdsfsd.png', full: 'https://i.ibb.co/MkCmHfJT/fdsfsd.png' }
-            ],
-            portrait: [
-                { id: 'p1', thumb: 'https://i.ibb.co/Hpx5QBBq/Artboard-1.png', full: 'https://i.ibb.co/Hpx5QBBq/Artboard-1.png' },
-                { id: 'p2', thumb: 'https://i.ibb.co/Hpx5QBBq/Artboard-1.png', full: 'https://i.ibb.co/Hpx5QBBq/Artboard-1.png' },
-                { id: 'p3', thumb: 'https://i.ibb.co/Hpx5QBBq/Artboard-1.png', full: 'https://i.ibb.co/Hpx5QBBq/Artboard-1.png' }
-            ]
-        };
+    <!-- ====== LOGO PANEL ====== -->
+    <div class="prop-panel" id="logoPanel">
+      <div class="prop-hdr">
+        <div class="prop-hdr-ico"><i class="fa-solid fa-image"></i></div>
+        <div class="prop-hdr-info">
+          <div class="prop-hdr-name">الشعار</div>
+          <div class="prop-hdr-sub">اضغط واسحب لتحريكه</div>
+        </div>
+        <div class="prop-hdr-actions">
+          <button class="lock-btn" id="logoLockBtn" title="قفل الموضع">
+            <i class="fa-solid fa-lock-open" id="logoLockIco"></i>
+          </button>
+        </div>
+      </div>
 
-        const elements = {
-            themeToggleCheckbox: document.getElementById('themeToggleCheckbox'),
-            previewContainer: document.querySelector('.preview-container'),
-            previewArea: document.getElementById('previewArea'),
-            backgroundImage: document.getElementById('backgroundImage'),
-            loadingOverlay: document.getElementById('loadingOverlay'),
-            downloadPngBtn: document.getElementById('downloadPngBtn'),
-            downloadPdfBtn: document.getElementById('downloadPdfBtn'), 
-            showSingleBtn: document.getElementById('show-single'),
-            showBatchBtn: document.getElementById('show-batch'),
-            singleDesignerPanel: document.getElementById('single-designer-panel'),
-            batchProducerPanel: document.getElementById('batch-producer-panel'),
-            orientationLandscapeBtn: document.getElementById('orientation-landscape'),
-            orientationPortraitBtn: document.getElementById('orientation-portrait'),
-            landscapeTemplatesContainer: document.getElementById('landscape-templates'),
-            portraitTemplatesContainer: document.getElementById('portrait-templates'),
-            templatesSectionTitle: document.getElementById('templates-section-title'),
-            propertiesInspector: document.getElementById('propertiesInspector'),
-            propertiesPlaceholder: document.getElementById('properties-placeholder'),
-            textPropertiesPanel: document.getElementById('text-properties'),
-            logoPropertiesPanel: document.getElementById('logo-properties'),
-            propertyTitleText: document.getElementById('property-title-text'),
-            textInput: document.getElementById('text-input'),
-            textColorSelector: document.getElementById('text-color-selector'),
-            fontSizeSlider: document.querySelector('#text-properties .font-size-slider'),
-            fontSizeValue: document.querySelector('#text-properties .font-size-value'),
-            boldToggleBtn: document.querySelector('#text-properties .bold-toggle-btn'),
-            logoSizeSlider: document.getElementById('logoSizeSlider'),
-            logoSizeValue: document.getElementById('logoSizeValue'),
-            removeLogoBtn: document.getElementById('removeLogoBtn'),
-            backgroundUpload: document.getElementById('backgroundUpload'),
-            logoUpload: document.getElementById('logoUpload'),
-            batchFileUpload: document.getElementById('batchFileUpload'),
-            fileName: document.getElementById('fileName'),
-            generatePdfBtn: document.getElementById('generatePdfBtn'),
-            selectableElements: document.querySelectorAll('.selectable'),
-            saveTemplateBtn: document.getElementById('saveTemplateBtn'),
-            savedTemplatesContainer: document.getElementById('saved-templates-container')
-        };
-        
-        let activeElement = null;
-        let couponCodes = [];
-        const notificationContainer = document.getElementById('notification-container');
+      <div class="psec">
+        <div class="field">
+          <label class="f-lbl">الحجم</label>
+          <div class="sl-row">
+            <input type="range" id="logoSzSl" min="20" max="350" value="90">
+            <span class="sl-val" id="logoSzVal">90px</span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="f-lbl">الشفافية</label>
+          <div class="sl-row">
+            <input type="range" id="logoOpSl" min="10" max="100" value="100">
+            <span class="sl-val" id="logoOpVal">100%</span>
+          </div>
+        </div>
+      </div>
 
-        // --- Notification System ---
-        function showNotification(type = 'success', title, message) {
-            const toast = document.createElement('div');
-            toast.classList.add('toast', type);
-            const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-exclamation-triangle' };
-            toast.innerHTML = `
-                <i class="fa-solid ${icons[type]}"></i>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="close-btn">&times;</button>`;
-            notificationContainer.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 100);
-            const hideTimeout = setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 400); }, 5000);
-            toast.querySelector('.close-btn').addEventListener('click', () => {
-                clearTimeout(hideTimeout);
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 400);
-            });
-        }
+      <div class="psec">
+        <div class="sec-lbl">الموضع</div>
+        <div class="xy-grid">
+          <div class="xy-field">
+            <label class="f-lbl">X %</label>
+            <input type="number" id="logoPosX" min="0" max="100" step="0.5">
+          </div>
+          <div class="xy-field">
+            <label class="f-lbl">Y %</label>
+            <input type="number" id="logoPosY" min="0" max="100" step="0.5">
+          </div>
+        </div>
+        <div class="center-grid">
+          <button class="btn btn-ghost btn-sm" id="logoCtrH"><i class="fa-solid fa-arrows-left-right"></i> أفقي</button>
+          <button class="btn btn-ghost btn-sm" id="logoCtrV"><i class="fa-solid fa-arrows-up-down"></i> عمودي</button>
+          <button class="btn btn-ghost btn-sm center-full" id="logoCtrBoth"><i class="fa-solid fa-crosshairs"></i> توسيط الاثنين</button>
+        </div>
+      </div>
 
-        // --- Mode Switcher Logic ---
-        elements.showSingleBtn.addEventListener('click', () => {
-            elements.singleDesignerPanel.style.display = 'block';
-            elements.batchProducerPanel.style.display = 'none';
-            elements.showSingleBtn.classList.add('active');
-            elements.showBatchBtn.classList.remove('active');
-        });
-        elements.showBatchBtn.addEventListener('click', () => {
-            elements.singleDesignerPanel.style.display = 'none';
-            elements.batchProducerPanel.style.display = 'block';
-            elements.showSingleBtn.classList.remove('active');
-            elements.showBatchBtn.classList.add('active');
-        });
-        
-        // --- Orientation & Templates Logic ---
-        const setOrientation = (orientation) => {
-            const isLandscape = orientation === 'landscape';
-            elements.previewArea.classList.toggle('portrait', !isLandscape);
-            elements.previewContainer.classList.toggle('portrait-mode', !isLandscape);
-            elements.orientationLandscapeBtn.classList.toggle('active', isLandscape);
-            elements.orientationPortraitBtn.classList.toggle('active', !isLandscape);
-            elements.landscapeTemplatesContainer.style.display = isLandscape ? 'grid' : 'none';
-            elements.portraitTemplatesContainer.style.display = isLandscape ? 'none' : 'grid';
-            elements.templatesSectionTitle.textContent = isLandscape ? 'قوالب عرضية' : 'قوالب طولية';
-            if (isLandscape && !document.querySelector('#landscape-templates .template-thumb.active')) {
-                applyTemplate(templates.landscape[0].full, 'l1');
-            } else if (!isLandscape && !document.querySelector('#portrait-templates .template-thumb.active')) {
-                applyTemplate(templates.portrait[0].full, 'p1');
-            }
-        };
-        elements.orientationLandscapeBtn.addEventListener('click', () => setOrientation('landscape'));
-        elements.orientationPortraitBtn.addEventListener('click', () => setOrientation('portrait'));
+      <div class="psec">
+        <button class="btn btn-danger btn-full btn-sm" id="removeLogoBtn">
+          <i class="fa-solid fa-trash"></i> حذف الشعار
+        </button>
+      </div>
+    </div>
 
-        const applyTemplate = (fullUrl, templateId) => {
-            elements.backgroundImage.src = fullUrl;
-            document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active'));
-            const newActive = document.querySelector(`[data-id="${templateId}"]`);
-            if (newActive) newActive.classList.add('active');
-        };
+  </aside>
 
-        const renderTemplates = () => {
-            ['landscape', 'portrait'].forEach(type => {
-                const container = (type === 'landscape') ? elements.landscapeTemplatesContainer : elements.portraitTemplatesContainer;
-                container.innerHTML = '';
-                templates[type].forEach(t => {
-                    const img = document.createElement('img');
-                    img.src = t.thumb;
-                    img.dataset.id = t.id;
-                    img.classList.add('template-thumb');
-                    img.addEventListener('click', () => applyTemplate(t.full, t.id));
-                    container.appendChild(img);
-                });
-            });
-            applyTemplate(templates.landscape[0].full, 'l1');
-        };
+  <!-- CENTER: Canvas -->
+  <main class="panel-center">
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="canvas" id="canvas">
+        <img class="canvas-bg" id="bgImg" src="https://i.ibb.co/dG0G2pB/coupon-bg-1.png" crossorigin="anonymous"/>
+        <div id="mainText" data-name="النص الأساسي" class="movable selectable"
+             style="top:20%;left:50%;transform:translateX(-50%);font-size:30px;color:#111827;font-weight:700;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+          النص الأساسي
+        </div>
+        <div id="subText" data-name="النص الفرعي" class="movable selectable"
+             style="top:38%;left:50%;transform:translateX(-50%);font-size:18px;color:#374151;font-weight:400;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+          النص الفرعي
+        </div>
+        <div id="codeText" data-name="كود الخصم" class="movable selectable"
+             style="top:54%;left:50%;transform:translateX(-50%);font-size:38px;color:#f96714;font-weight:900;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+          CODE-123
+        </div>
+        <div id="termsText" data-name="الشروط والأحكام" class="movable selectable"
+             style="top:87%;left:50%;transform:translateX(-50%);font-size:11px;color:#6b7280;font-weight:400;text-align:center;font-family:'LamaSans','Cairo',sans-serif">
+          الشروط والأحكام • تنتهي الصلاحية قريباً
+        </div>
+        <img id="logoPreview" data-name="الشعار" class="selectable" src="" alt=""/>
+      </div>
+    </div>
+  </main>
 
-        // --- Properties Inspector Logic ---
-        function showPropertiesFor(element) {
-            elements.propertiesPlaceholder.style.display = 'none';
-            elements.textPropertiesPanel.classList.remove('active');
-            elements.logoPropertiesPanel.classList.remove('active');
-            elements.selectableElements.forEach(el => el.classList.remove('active'));
-            
-            if (!element) {
-                 elements.propertiesPlaceholder.style.display = 'block';
-                 activeElement = null;
-                 return;
-            }
+  <!-- LEFT: Tools -->
+  <aside class="panel panel-left">
 
-            activeElement = element;
-            activeElement.classList.add('active');
+    <!-- Mode -->
+    <div class="psec">
+      <div class="seg">
+        <button class="seg-btn active" id="btnSingle"><i class="fa-solid fa-ticket"></i> كوبون فردي</button>
+        <button class="seg-btn" id="btnBatch"><i class="fa-solid fa-layer-group"></i> مجموعة</button>
+      </div>
+    </div>
 
-            if (activeElement.classList.contains('overlay-text')) {
-                updateTextPropertiesPanel();
-                elements.textPropertiesPanel.classList.add('active');
-            } else if (activeElement.id === 'logoPreview') {
-                updateLogoPropertiesPanel();
-                elements.logoPropertiesPanel.classList.add('active');
-            }
-        }
+    <!-- SINGLE PANEL -->
+    <div id="singlePanel">
 
-        function updateTextPropertiesPanel() {
-            if (!activeElement) return;
-            const style = window.getComputedStyle(activeElement);
-            elements.propertyTitleText.textContent = `خصائص: ${activeElement.dataset.name}`;
-            elements.textInput.value = activeElement.innerHTML.replace(/<br\s*\/?>/gi, "\n");
-            elements.fontSizeSlider.value = parseInt(style.fontSize, 10);
-            elements.fontSizeValue.textContent = `${parseInt(style.fontSize, 10)}px`;
-            elements.boldToggleBtn.classList.toggle('active', parseInt(style.fontWeight) >= 700);
-            
-            const rgbToHex = (rgb) => {
-              if (!rgb || !rgb.includes('rgb')) return '#000000';
-              let [r, g, b] = rgb.match(/\d+/g).map(Number);
-              return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toLowerCase();
-            }
+      <div class="psec">
+        <div class="sec-lbl">الخلفية والشعار</div>
+        <div class="btn-row">
+          <label class="file-btn"><input type="file" id="bgUpload" accept="image/*"><i class="fa-solid fa-image"></i> الخلفية</label>
+          <label class="file-btn"><input type="file" id="logoUpload" accept="image/*"><i class="fa-solid fa-user-circle"></i> الشعار</label>
+        </div>
+      </div>
 
-            const currentColor = rgbToHex(style.color);
-            elements.textColorSelector.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.color.toLowerCase() === currentColor);
-            });
-        }
-        
-        function updateLogoPropertiesPanel() {
-            if (!activeElement) return;
-            elements.logoSizeSlider.value = parseInt(activeElement.style.width, 10) || 100;
-            elements.logoSizeValue.textContent = `${elements.logoSizeSlider.value}px`;
-        }
+      <div class="psec">
+        <div class="sec-lbl">الاتجاه (A6)</div>
+        <div class="seg">
+          <button class="seg-btn active" id="btnLandscape"><i class="fa-solid fa-panorama"></i> عرضي</button>
+          <button class="seg-btn" id="btnPortrait"><i class="fa-solid fa-mobile-screen"></i> طولي</button>
+        </div>
+      </div>
 
-        elements.selectableElements.forEach(el => {
-            el.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showPropertiesFor(el);
-            });
-        });
-        
-        document.body.addEventListener('click', (e) => {
-            if (!elements.propertiesInspector.contains(e.target) && !e.target.classList.contains('selectable')) {
-                showPropertiesFor(null);
-            }
-        });
+      <div class="psec">
+        <div class="sec-lbl" id="tplLabel">قوالب عرضية</div>
+        <div class="tpl-grid" id="lsTpls"></div>
+        <div class="tpl-grid" id="ptTpls" style="display:none"></div>
+      </div>
 
-        // --- Text Control Event Listeners ---
-        elements.textInput.addEventListener('input', () => { if (activeElement) activeElement.innerHTML = elements.textInput.value.replace(/\n/g, '<br>'); });
-        elements.fontSizeSlider.addEventListener('input', () => { if (activeElement) { activeElement.style.fontSize = `${elements.fontSizeSlider.value}px`; elements.fontSizeValue.textContent = `${elements.fontSizeSlider.value}px`; } });
-        elements.boldToggleBtn.addEventListener('click', () => { if (activeElement) { const isBold = (window.getComputedStyle(activeElement).fontWeight) >= 700; activeElement.style.fontWeight = isBold ? '400' : '800'; elements.boldToggleBtn.classList.toggle('active', !isBold); } });
-        elements.textColorSelector.addEventListener('click', (e) => { const btn = e.target.closest('.color-btn'); if (activeElement && btn) { activeElement.style.color = btn.dataset.color; updateTextPropertiesPanel(); } });
+      <div class="psec">
+        <div class="sec-lbl">تصدير</div>
+        <div class="export-grid">
+          <button class="btn btn-success" id="btnPng"><i class="fa-solid fa-file-image"></i> PNG</button>
+          <button class="btn btn-danger" id="btnPdf"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+        </div>
+      </div>
 
-        // --- Logo Control Event Listeners ---
-        elements.logoSizeSlider.addEventListener('input', () => { if (activeElement) { activeElement.style.width = `${elements.logoSizeSlider.value}px`; updateLogoPropertiesPanel();} });
-        
-        // --- General Controls Logic ---
-        const handleFileUpload = (event, onRead) => { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = e => onRead(e.target.result); reader.readAsDataURL(file); };
-        elements.backgroundUpload.addEventListener('change', e => { handleFileUpload(e, (result) => { elements.backgroundImage.src = result; document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active')); }); });
-        elements.logoUpload.addEventListener('change', e => handleFileUpload(e, (result) => { const logo = document.getElementById('logoPreview'); logo.src = result; logo.style.display = 'block'; showPropertiesFor(logo); }));
-        elements.removeLogoBtn.addEventListener('click', () => { const logo = document.getElementById('logoPreview'); logo.src = ''; logo.style.display = 'none'; showPropertiesFor(null); });
+      <div class="psec">
+        <div class="sec-lbl">قوالبي</div>
+        <button class="btn btn-info btn-full btn-sm" id="btnSave" style="margin-bottom:11px">
+          <i class="fa-solid fa-bookmark"></i> حفظ التصميم الحالي
+        </button>
+        <div class="tpl-grid" id="savedGrid">
+          <p class="empty-st">لا توجد قوالب محفوظة.</p>
+        </div>
+      </div>
 
-        // --- Export & Theme ---
-        const performExport = async (exportFunction) => {
-            showPropertiesFor(null);
-            await new Promise(res => setTimeout(res, 50));
-            elements.loadingOverlay.style.display = 'flex';
+    </div>
 
-            const previewOriginalRadius = elements.previewArea.style.borderRadius;
-            const bgOriginalRadius = elements.backgroundImage.style.borderRadius;
-            elements.previewArea.style.borderRadius = '0px';
-            elements.backgroundImage.style.borderRadius = '0px';
-            
-            try {
-                await exportFunction();
-            } catch (err) {
-                console.error('Export error:', err);
-                showNotification('error', 'خطأ في التصدير', 'حدث خطأ غير متوقع أثناء عملية التصدير.');
-            } finally {
-                elements.loadingOverlay.style.display = 'none';
-                elements.previewArea.style.borderRadius = previewOriginalRadius;
-                elements.backgroundImage.style.borderRadius = bgOriginalRadius;
-            }
-        };
+    <!-- BATCH PANEL -->
+    <div id="batchPanel" style="display:none">
+      <div class="psec">
+        <div class="sec-lbl">ملف الأكواد</div>
+        <p style="font-size:.78rem;color:var(--t2);line-height:1.65;margin-bottom:12px">
+          سيُستخدم التصميم الحالي قالباً لكل الكوبونات. ارفع ملف Excel أو CSV.
+        </p>
+        <label class="upload-zone" id="dropZone">
+          <input type="file" id="batchFile" accept=".xlsx,.xls,.csv">
+          <i class="fa-solid fa-file-spreadsheet"></i>
+          <p id="batchFName">اسحب الملف أو انقر للاختيار</p>
+          <small>Excel (.xlsx) أو CSV — عمود واحد من الأكواد</small>
+        </label>
+        <div id="batchBadgeWrap" style="display:none;text-align:center;margin-top:10px">
+          <span class="badge badge-ok" id="batchBadge"></span>
+        </div>
+      </div>
+      <div class="psec">
+        <button class="btn btn-primary btn-full" id="btnGenBatch">
+          <i class="fa-solid fa-file-pdf"></i> إنشاء وتصدير PDF
+        </button>
+      </div>
+    </div>
 
-        elements.downloadPngBtn.addEventListener('click', () => {
-            performExport(async () => {
-                 const canvas = await html2canvas(elements.previewArea, { scale: 3, useCORS: true, backgroundColor: null, allowTaint: true }); 
-                 const link = document.createElement('a'); 
-                 link.download = `coupon-${Date.now()}.png`; 
-                 link.href = canvas.toDataURL('image/png'); 
-                 link.click(); 
-            });
-        });
-        
-        elements.downloadPdfBtn.addEventListener('click', () => {
-            performExport(async () => {
-                const { jsPDF } = window.jspdf;
-                const isPortrait = elements.previewArea.classList.contains('portrait');
-                const orientation = isPortrait ? 'p' : 'l';
-                const width = elements.previewArea.offsetWidth;
-                const height = elements.previewArea.offsetHeight;
+  </aside>
+</div>
 
-                const pdf = new jsPDF({ orientation, unit: 'px', format: [width, height] });
-                const canvas = await html2canvas(elements.previewArea, { scale: 2, useCORS: true, backgroundColor: null, allowTaint: true });
-                const imgData = canvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-                pdf.save(`coupon-single-${Date.now()}.pdf`);
-            });
-        });
-        
-        elements.themeToggleCheckbox.addEventListener('change', () => {
-             document.body.classList.toggle('dark-mode');
-        });
+<!-- Loading -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p id="loadingMsg">جاري المعالجة...</p>
+</div>
 
-        // --- Batch Processing (FIXED) ---
-        elements.batchFileUpload.addEventListener('change', (event) => {
-            const file = event.target.files[0]; if (!file) return;
-            elements.fileName.textContent = file.name;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    couponCodes = json.map(row => row[0]).filter(code => code != null && String(code).trim() !== '');
-                    if (couponCodes.length > 0) {
-                       const codeTextElement = document.getElementById('codeText');
-                       codeTextElement.textContent = couponCodes[0];
-                       showNotification('success', 'نجاح', `تم تحميل ${couponCodes.length} كود بنجاح.`);
-                    } else { 
-                       showNotification('error', 'خطأ', 'لم يتم العثور على أكواد صالحة في الملف.');
-                    }
-                } catch (err) { 
-                    console.error(err); 
-                    showNotification('error', 'خطأ في الملف', 'فشل قراءة الملف، الرجاء التأكد من الصيغة.');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        });
+<!-- Toasts -->
+<div class="toasts" id="toasts"></div>
 
-        elements.generatePdfBtn.addEventListener('click', () => {
-             if (couponCodes.length === 0) {
-                 showNotification('warning', 'تنبيه', 'الرجاء رفع ملف يحتوي على أكواد أولاً.');
-                 return;
-             }
-             
-             performExport(async () => {
-                const isPortrait = elements.previewArea.classList.contains('portrait');
-                const orientation = isPortrait ? 'p' : 'l';
-                const width = elements.previewArea.offsetWidth;
-                const height = elements.previewArea.offsetHeight;
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ orientation: orientation, unit: 'px', format: [width, height] });
-                const codeTextElement = document.getElementById('codeText');
-                const originalCode = codeTextElement.textContent;
-                
-                for (let i = 0; i < couponCodes.length; i++) {
-                    codeTextElement.textContent = couponCodes[i];
-                    await new Promise(res => setTimeout(res, 50));
-                    const canvas = await html2canvas(elements.previewArea, { scale: 2, useCORS: true, backgroundColor: null, allowTaint: true });
-                    const imgData = canvas.toDataURL('image/png');
-                    if (i > 0) pdf.addPage([width, height], orientation);
-                    pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-                }
-                pdf.save(`coupons-batch-A6-${Date.now()}.pdf`);
-                codeTextElement.textContent = originalCode;
-            });
-        });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-        // === SAVED TEMPLATES LOGIC (UPDATED) ===
+<script>
+(() => {
+'use strict';
 
-        function saveCurrentTemplate() {
-            const name = prompt("يرجى إدخال اسم للقالب:", "قالب مخصص");
-            if (!name || name.trim() === "") {
-                showNotification('warning', 'تم الإلغاء', 'لم يتم إدخال اسم صالح للقالب.');
-                return;
-            }
+const TEMPLATES = {
+  landscape: [
+    {id:'l1',url:'https://i.ibb.co/MkCmHfJT/fdsfsd.png'},
+    {id:'l2',url:'https://i.ibb.co/MkCmHfJT/fdsfsd.png'},
+    {id:'l3',url:'https://i.ibb.co/MkCmHfJT/fdsfsd.png'},
+  ],
+  portrait: [
+    {id:'p1',url:'https://i.ibb.co/Hpx5QBBq/Artboard-1.png'},
+    {id:'p2',url:'https://i.ibb.co/Hpx5QBBq/Artboard-1.png'},
+    {id:'p3',url:'https://i.ibb.co/Hpx5QBBq/Artboard-1.png'},
+  ]
+};
 
-            const templateData = {
-                id: `saved-${Date.now()}`,
-                name: name.trim(),
-                texts: {},
-                logo: {},
-                background: elements.backgroundImage.src,
-                orientation: elements.previewArea.classList.contains('portrait') ? 'portrait' : 'landscape'
-            };
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
 
-            document.querySelectorAll('.overlay-text').forEach(el => {
-                const style = window.getComputedStyle(el);
-                templateData.texts[el.id] = {
-                    content: el.innerHTML,
-                    top: el.style.top,
-                    left: el.style.left,
-                    transform: el.style.transform,
-                    fontSize: style.fontSize,
-                    color: style.color,
-                    fontWeight: style.fontWeight
-                };
-            });
+// ─── DOM SHORTCUTS ───────────────────────────────────────────────
+const D = {
+  body: document.body,
+  themeToggle: $('themeToggle'),
+  btnUndo: $('btnUndo'), btnRedo: $('btnRedo'),
+  inspector: $('inspector'),
+  propsPlaceholder: $('propsPlaceholder'),
+  textPanel: $('textPanel'), logoPanel: $('logoPanel'),
+  propName: $('propName'),
+  lockBtn: $('lockBtn'), lockIco: $('lockIco'),
+  logoLockBtn: $('logoLockBtn'), logoLockIco: $('logoLockIco'),
+  textInput: $('textInput'),
+  fontSzSl: $('fontSzSl'), fontSzVal: $('fontSzVal'),
+  lspaceSl: $('lspaceSl'), lspaceVal: $('lspaceVal'),
+  lhSl: $('lhSl'), lhVal: $('lhVal'),
+  textColSwatches: $('textColSwatches'), textColPicker: $('textColPicker'),
+  bgColSwatches: $('bgColSwatches'),
+  shadowSw: $('shadowSw'),
+  shadowIntWrap: $('shadowIntWrap'), shadowIntSl: $('shadowIntSl'), shadowIntVal: $('shadowIntVal'),
+  posX: $('posX'), posY: $('posY'),
+  ctrH: $('ctrH'), ctrV: $('ctrV'), ctrBoth: $('ctrBoth'),
+  logoSzSl: $('logoSzSl'), logoSzVal: $('logoSzVal'),
+  logoOpSl: $('logoOpSl'), logoOpVal: $('logoOpVal'),
+  logoPosX: $('logoPosX'), logoPosY: $('logoPosY'),
+  logoCtrH: $('logoCtrH'), logoCtrV: $('logoCtrV'), logoCtrBoth: $('logoCtrBoth'),
+  removeLogoBtn: $('removeLogoBtn'),
+  canvasWrap: $('canvasWrap'), canvas: $('canvas'), bgImg: $('bgImg'),
+  logo: $('logoPreview'),
+  btnSingle: $('btnSingle'), btnBatch: $('btnBatch'),
+  singlePanel: $('singlePanel'), batchPanel: $('batchPanel'),
+  btnLandscape: $('btnLandscape'), btnPortrait: $('btnPortrait'),
+  tplLabel: $('tplLabel'), lsTpls: $('lsTpls'), ptTpls: $('ptTpls'),
+  btnPng: $('btnPng'), btnPdf: $('btnPdf'),
+  btnSave: $('btnSave'), savedGrid: $('savedGrid'),
+  dropZone: $('dropZone'), batchFile: $('batchFile'), batchFName: $('batchFName'),
+  batchBadgeWrap: $('batchBadgeWrap'), batchBadge: $('batchBadge'),
+  btnGenBatch: $('btnGenBatch'),
+  loading: $('loading'), loadingMsg: $('loadingMsg'),
+  toasts: $('toasts'),
+};
 
-            const logo = document.getElementById('logoPreview');
-            if (logo && logo.src && logo.style.display !== 'none') {
-                templateData.logo = {
-                    src: logo.src,
-                    top: logo.style.top,
-                    left: logo.style.left,
-                    width: logo.style.width
-                };
-            }
+// ─── STATE ───────────────────────────────────────────────────────
+let activeEl = null;
+let couponCodes = [];
+let orientation = 'landscape';
+const locks = {};     // {elId: bool}
+let suppressSync = false;
 
-            const savedTemplates = JSON.parse(localStorage.getItem('myCouponTemplates')) || [];
-            savedTemplates.push(templateData);
-            localStorage.setItem('myCouponTemplates', JSON.stringify(savedTemplates));
+// ─── HISTORY (UNDO/REDO) ─────────────────────────────────────────
+const Hist = (() => {
+  const MAX = 60;
+  let stack = [], idx = -1, timer = null;
 
-            loadSavedTemplates();
-            showNotification('success', 'تم الحفظ', `تم حفظ قالب "${templateData.name}" بنجاح.`);
-        }
-
-        function applyTemplateData(templateData) {
-            setOrientation(templateData.orientation); 
-
-            elements.backgroundImage.src = templateData.background;
-            document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active'));
-
-            Object.keys(templateData.texts).forEach(id => {
-                const el = document.getElementById(id);
-                const data = templateData.texts[id];
-                if (el) {
-                    el.innerHTML = data.content;
-                    el.style.top = data.top;
-                    el.style.left = data.left;
-                    el.style.transform = data.transform;
-                    el.style.fontSize = data.fontSize;
-                    el.style.color = data.color;
-                    el.style.fontWeight = data.fontWeight;
-                }
-            });
-
-            const logo = document.getElementById('logoPreview');
-            if (templateData.logo && templateData.logo.src) {
-                logo.src = templateData.logo.src;
-                logo.style.display = 'block';
-                logo.style.top = templateData.logo.top;
-                logo.style.left = templateData.logo.left;
-                logo.style.width = templateData.logo.width;
-            } else {
-                logo.src = '';
-                logo.style.display = 'none';
-            }
-            showNotification('success', 'تم التطبيق', `تم تطبيق قالب "${templateData.name}" بنجاح.`);
-        }
-
-        function deleteTemplate(templateId) {
-            let savedTemplates = JSON.parse(localStorage.getItem('myCouponTemplates')) || [];
-            savedTemplates = savedTemplates.filter(t => t.id !== templateId);
-            localStorage.setItem('myCouponTemplates', JSON.stringify(savedTemplates));
-            loadSavedTemplates();
-        }
-
-        function loadSavedTemplates() {
-            const savedTemplates = JSON.parse(localStorage.getItem('myCouponTemplates')) || [];
-            elements.savedTemplatesContainer.innerHTML = '';
-
-            if (savedTemplates.length === 0) {
-                elements.savedTemplatesContainer.innerHTML = '<p style="color: var(--tertiary-color); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">لا توجد قوالب محفوظة بعد.</p>';
-                return;
-            }
-            
-            savedTemplates.forEach(template => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'saved-template-wrapper';
-
-                const thumb = document.createElement('img');
-                thumb.src = template.background;
-                thumb.classList.add('template-thumb');
-                thumb.style.aspectRatio = template.orientation === 'portrait' ? '1.05 / 1.48' : '1.48 / 1.05';
-                thumb.title = `تطبيق قالب: ${template.name}`;
-                thumb.addEventListener('click', () => applyTemplateData(template));
-
-                const nameLabel = document.createElement('p');
-                nameLabel.textContent = template.name;
-                nameLabel.className = 'template-name-label';
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
-                deleteBtn.className = 'delete-template-btn';
-                deleteBtn.title = 'حذف هذا القالب';
-                deleteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (confirm(`هل أنت متأكد من رغبتك في حذف قالب "${template.name}"؟`)) {
-                        deleteTemplate(template.id);
-                    }
-                });
-
-                wrapper.appendChild(deleteBtn);
-                wrapper.appendChild(thumb);
-                wrapper.appendChild(nameLabel);
-                elements.savedTemplatesContainer.appendChild(wrapper);
-            });
-        }
-
-        elements.saveTemplateBtn.addEventListener('click', saveCurrentTemplate);
-        
-        // --- Movable Items ---
-        document.querySelectorAll('.movable-item').forEach(element => {
-            let isDragging = false;
-            let startPosX, startPosY, startElemX, startElemY;
-
-            const getPointerPosition = (e) => e.type.includes('touch') ? e.touches[0] : e;
-
-            function onDragStart(e) {
-                e.preventDefault();
-                showPropertiesFor(element);
-                isDragging = true;
-                
-                if (element.id === 'logoPreview') {
-                    element.style.right = 'auto';
-                }
-
-                const pointer = getPointerPosition(e);
-                startPosX = pointer.clientX;
-                startPosY = pointer.clientY;
-                startElemX = element.offsetLeft;
-                startElemY = element.offsetTop;
-                
-                element.style.willChange = 'transform';
-                document.addEventListener('mousemove', onDragMove);
-                document.addEventListener('touchmove', onDragMove, { passive: false });
-                document.addEventListener('mouseup', onDragEnd);
-                document.addEventListener('touchend', onDragEnd);
-            }
-
-            function onDragMove(e) {
-                if (!isDragging) return;
-                e.preventDefault();
-                
-                const pointer = getPointerPosition(e);
-                const deltaX = pointer.clientX - startPosX;
-                const deltaY = pointer.clientY - startPosY;
-                
-                element.style.left = `${startElemX + deltaX}px`;
-                element.style.top = `${startElemY + deltaY}px`;
-                
-                if (element.dataset.centered === 'true') {
-                    element.style.transform = '';
-                    element.dataset.centered = 'false';
-                }
-            }
-
-            function onDragEnd() {
-                isDragging = false;
-                element.style.willChange = 'auto';
-                document.removeEventListener('mousemove', onDragMove);
-                document.removeEventListener('touchmove', onDragMove);
-                document.removeEventListener('mouseup', onDragEnd);
-                document.removeEventListener('touchend', onDragEnd);
-            }
-
-            element.addEventListener('mousedown', onDragStart);
-            element.addEventListener('touchstart', onDragStart, { passive: false });
-        });
-
-        // --- Initialise App ---
-        renderTemplates();
-        loadSavedTemplates(); // Load user's saved templates on startup
-        setOrientation('landscape');
-        showPropertiesFor(null);
+  function capture() {
+    const state = { bg: D.bgImg.src, orientation };
+    state.texts = {};
+    $$('.movable:not(img)').forEach(el => {
+      const cs = window.getComputedStyle(el);
+      state.texts[el.id] = {
+        html: el.innerHTML, top: el.style.top, left: el.style.left,
+        transform: el.style.transform,
+        fontSize: cs.fontSize, color: cs.color, fontWeight: cs.fontWeight,
+        textAlign: cs.textAlign, letterSpacing: cs.letterSpacing,
+        lineHeight: cs.lineHeight, textShadow: cs.textShadow,
+        backgroundColor: cs.backgroundColor, padding: el.style.padding,
+        borderRadius: el.style.borderRadius,
+      };
     });
-    </script>
+    const lg = D.logo;
+    state.logo = {
+      src: lg.src, display: lg.style.display,
+      top: lg.style.top, left: lg.style.left, right: lg.style.right,
+      width: lg.style.width, opacity: lg.style.opacity,
+    };
+    return state;
+  }
+
+  function restore(state) {
+    suppressSync = true;
+    D.bgImg.src = state.bg;
+    $$('.tpl').forEach(t => t.classList.remove('active'));
+
+    Object.entries(state.texts).forEach(([id, t]) => {
+      const el = $(id); if (!el) return;
+      el.innerHTML = t.html;
+      el.style.top = t.top; el.style.left = t.left;
+      el.style.transform = t.transform;
+      el.style.fontSize = t.fontSize; el.style.color = t.color;
+      el.style.fontWeight = t.fontWeight; el.style.textAlign = t.textAlign;
+      el.style.letterSpacing = t.letterSpacing; el.style.lineHeight = t.lineHeight;
+      el.style.textShadow = t.textShadow; el.style.backgroundColor = t.backgroundColor;
+      el.style.padding = t.padding; el.style.borderRadius = t.borderRadius;
+    });
+
+    const lg = D.logo, l = state.logo;
+    lg.src = l.src; lg.style.display = l.display;
+    lg.style.top = l.top; lg.style.left = l.left; lg.style.right = l.right;
+    lg.style.width = l.width; lg.style.opacity = l.opacity;
+
+    if (state.orientation !== orientation) setOrientation(state.orientation, false);
+    suppressSync = false;
+    if (activeEl) syncInspector();
+  }
+
+  function push() {
+    const s = capture();
+    stack = stack.slice(0, idx + 1);
+    stack.push(s);
+    if (stack.length > MAX) { stack.shift(); } else { idx++; }
+    updateUI();
+  }
+
+  function pushLazy(delay = 500) {
+    clearTimeout(timer);
+    timer = setTimeout(push, delay);
+  }
+
+  function undo() { if (idx > 0) { idx--; restore(stack[idx]); updateUI(); } }
+  function redo() { if (idx < stack.length-1) { idx++; restore(stack[idx]); updateUI(); } }
+
+  function updateUI() {
+    D.btnUndo.disabled = idx <= 0;
+    D.btnRedo.disabled = idx >= stack.length - 1;
+  }
+
+  return { push, pushLazy, undo, redo };
+})();
+
+// ─── TOAST ───────────────────────────────────────────────────────
+function toast(type, title, msg) {
+  const icons = {ok:'fa-check', err:'fa-xmark', wrn:'fa-exclamation'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `
+    <div class="toast-ico"><i class="fa-solid ${icons[type]||'fa-info'}"></i></div>
+    <div class="toast-body">
+      <div class="toast-ttl">${title}</div>
+      ${msg ? `<div class="toast-msg">${msg}</div>` : ''}
+    </div>
+    <button class="toast-x">&times;</button>`;
+  D.toasts.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  const dismiss = () => {
+    el.classList.add('hide'); el.classList.remove('show');
+    setTimeout(() => el.remove(), 300);
+  };
+  el.querySelector('.toast-x').addEventListener('click', dismiss);
+  setTimeout(dismiss, 4500);
+}
+
+// ─── LOADING ─────────────────────────────────────────────────────
+function showLoading(msg='جاري المعالجة...') { D.loadingMsg.textContent=msg; D.loading.classList.add('show'); }
+function hideLoading() { D.loading.classList.remove('show'); }
+
+// ─── THEME ───────────────────────────────────────────────────────
+D.themeToggle.addEventListener('click', () => {
+  D.body.classList.toggle('dark');
+  D.themeToggle.classList.toggle('on');
+});
+
+// ─── UNDO/REDO BUTTONS ───────────────────────────────────────────
+D.btnUndo.addEventListener('click', Hist.undo);
+D.btnRedo.addEventListener('click', Hist.redo);
+document.addEventListener('keydown', e => {
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (!ctrl) return;
+  if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); Hist.undo(); }
+  if (e.key === 'z' &&  e.shiftKey) { e.preventDefault(); Hist.redo(); }
+  if (e.key === 'y')                { e.preventDefault(); Hist.redo(); }
+});
+
+// ─── HELPERS ─────────────────────────────────────────────────────
+function rgbToHex(rgb) {
+  if (!rgb || !rgb.startsWith('rgb')) return '#000000';
+  const [r,g,b] = rgb.match(/\d+/g).map(Number);
+  return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+
+function getElPos(el) {
+  // Return {x,y} as % of canvas (using actual rendered position via getBCR)
+  const cr = D.canvas.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
+  const x = ((er.left - cr.left) / cr.width) * 100;
+  const y = ((er.top - cr.top) / cr.height) * 100;
+  return { x: +x.toFixed(1), y: +y.toFixed(1) };
+}
+
+function setElPos(el, xPct, yPct) {
+  el.style.transform = '';
+  el.style.left = xPct + '%';
+  el.style.top = yPct + '%';
+}
+
+function centerH(el) {
+  const {y} = getElPos(el);
+  const cr = D.canvas.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
+  const xPct = ((cr.width - er.width) / 2 / cr.width) * 100;
+  setElPos(el, +xPct.toFixed(1), y);
+}
+function centerV(el) {
+  const {x} = getElPos(el);
+  const cr = D.canvas.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
+  const yPct = ((cr.height - er.height) / 2 / cr.height) * 100;
+  setElPos(el, x, +yPct.toFixed(1));
+}
+function centerBoth(el) {
+  const cr = D.canvas.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
+  const xPct = ((cr.width - er.width) / 2 / cr.width) * 100;
+  const yPct = ((cr.height - er.height) / 2 / cr.height) * 100;
+  setElPos(el, +xPct.toFixed(1), +yPct.toFixed(1));
+}
+
+function isLocked(el) { return locks[el.id] === true; }
+
+// ─── INSPECTOR SELECTION ─────────────────────────────────────────
+function selectEl(el) {
+  $$('.selectable').forEach(e => e.classList.remove('selected'));
+  D.propsPlaceholder.style.display = 'none';
+  D.textPanel.classList.remove('active');
+  D.logoPanel.classList.remove('active');
+
+  if (!el) {
+    D.propsPlaceholder.style.display = 'flex';
+    activeEl = null;
+    return;
+  }
+  activeEl = el;
+  el.classList.add('selected');
+  if (el.id === 'logoPreview') {
+    syncLogoPanel();
+    D.logoPanel.classList.add('active');
+  } else {
+    syncTextPanel();
+    D.textPanel.classList.add('active');
+  }
+}
+
+function syncInspector() {
+  if (!activeEl) return;
+  if (activeEl.id === 'logoPreview') syncLogoPanel();
+  else syncTextPanel();
+}
+
+function syncTextPanel() {
+  if (!activeEl) return;
+  suppressSync = true;
+  const cs = window.getComputedStyle(activeEl);
+
+  D.propName.textContent = activeEl.dataset.name || 'نص';
+
+  // Content
+  D.textInput.value = activeEl.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+
+  // Font size
+  const sz = parseInt(cs.fontSize, 10);
+  D.fontSzSl.value = sz;
+  D.fontSzVal.textContent = sz + 'px';
+
+  // Font weight
+  const fw = cs.fontWeight;
+  $$('[data-fw]').forEach(b => {
+    b.classList.toggle('active', b.dataset.fw === fw ||
+      (b.dataset.fw === '400' && parseInt(fw)<500) ||
+      (b.dataset.fw === '600' && parseInt(fw)>=500 && parseInt(fw)<750) ||
+      (b.dataset.fw === '900' && parseInt(fw)>=750));
+  });
+
+  // Alignment
+  const align = cs.textAlign;
+  $$('[data-align]').forEach(b => b.classList.toggle('active', b.dataset.align === align));
+
+  // Letter spacing
+  const ls = parseFloat(cs.letterSpacing) || 0;
+  D.lspaceSl.value = ls;
+  D.lspaceVal.textContent = ls.toFixed(1);
+
+  // Line height
+  let lh = parseFloat(cs.lineHeight);
+  if (isNaN(lh)) lh = 1.3;
+  else lh = lh / parseInt(cs.fontSize, 10);
+  lh = isNaN(lh) ? 1.3 : +lh.toFixed(1);
+  D.lhSl.value = lh;
+  D.lhVal.textContent = lh;
+
+  // Text color
+  const hex = rgbToHex(cs.color);
+  D.textColSwatches.querySelectorAll('.swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.color && s.dataset.color.toLowerCase() === hex);
+  });
+
+  // Background color
+  const bg = cs.backgroundColor;
+  const isBgNone = bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent';
+  D.bgColSwatches.querySelectorAll('[data-bg]').forEach(s => {
+    if (s.dataset.bg === 'transparent') s.classList.toggle('active', isBgNone);
+    else s.classList.remove('active');
+  });
+
+  // Shadow
+  const hasShadow = cs.textShadow && cs.textShadow !== 'none';
+  D.shadowSw.classList.toggle('on', hasShadow);
+  D.shadowIntWrap.classList.toggle('show', hasShadow);
+
+  // Lock
+  const locked = isLocked(activeEl);
+  D.lockBtn.classList.toggle('locked', locked);
+  D.lockIco.className = locked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
+
+  // Position
+  const pos = getElPos(activeEl);
+  D.posX.value = pos.x;
+  D.posY.value = pos.y;
+
+  suppressSync = false;
+}
+
+function syncLogoPanel() {
+  if (!activeEl) return;
+  suppressSync = true;
+  const w = parseInt(activeEl.style.width, 10) || 90;
+  D.logoSzSl.value = w; D.logoSzVal.textContent = w + 'px';
+
+  const op = Math.round((parseFloat(activeEl.style.opacity) || 1) * 100);
+  D.logoOpSl.value = op; D.logoOpVal.textContent = op + '%';
+
+  const locked = isLocked(activeEl);
+  D.logoLockBtn.classList.toggle('locked', locked);
+  D.logoLockIco.className = locked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
+
+  const pos = getElPos(activeEl);
+  D.logoPosX.value = pos.x;
+  D.logoPosY.value = pos.y;
+  suppressSync = false;
+}
+
+// Click selectable
+$$('.selectable').forEach(el => {
+  el.addEventListener('click', e => { e.stopPropagation(); selectEl(el); });
+});
+document.body.addEventListener('click', e => {
+  if (!D.inspector.contains(e.target) && !e.target.classList.contains('selectable')) selectEl(null);
+});
+
+// ─── TEXT CONTROLS ───────────────────────────────────────────────
+D.textInput.addEventListener('input', () => {
+  if (!activeEl || suppressSync) return;
+  activeEl.innerHTML = D.textInput.value.replace(/\n/g, '<br>');
+  Hist.pushLazy(600);
+});
+
+D.fontSzSl.addEventListener('input', () => {
+  if (!activeEl) return;
+  activeEl.style.fontSize = D.fontSzSl.value + 'px';
+  D.fontSzVal.textContent = D.fontSzSl.value + 'px';
+  Hist.pushLazy(300);
+});
+
+$$('[data-fw]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!activeEl) return;
+    activeEl.style.fontWeight = btn.dataset.fw;
+    $$('[data-fw]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    Hist.push();
+  });
+});
+
+$$('[data-align]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!activeEl) return;
+    activeEl.style.textAlign = btn.dataset.align;
+    $$('[data-align]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    Hist.push();
+  });
+});
+
+D.lspaceSl.addEventListener('input', () => {
+  if (!activeEl) return;
+  activeEl.style.letterSpacing = D.lspaceSl.value + 'px';
+  D.lspaceVal.textContent = parseFloat(D.lspaceSl.value).toFixed(1);
+  Hist.pushLazy(300);
+});
+
+D.lhSl.addEventListener('input', () => {
+  if (!activeEl) return;
+  activeEl.style.lineHeight = D.lhSl.value;
+  D.lhVal.textContent = parseFloat(D.lhSl.value).toFixed(1);
+  Hist.pushLazy(300);
+});
+
+// Text color swatches
+D.textColSwatches.addEventListener('click', e => {
+  const sw = e.target.closest('.swatch');
+  if (!sw || !activeEl) return;
+  activeEl.style.color = sw.dataset.color;
+  D.textColSwatches.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  sw.classList.add('active');
+  Hist.push();
+});
+D.textColPicker.addEventListener('input', () => {
+  if (!activeEl) return;
+  activeEl.style.color = D.textColPicker.value;
+  D.textColSwatches.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  Hist.pushLazy(300);
+});
+
+// Background color swatches
+D.bgColSwatches.addEventListener('click', e => {
+  const sw = e.target.closest('[data-bg]');
+  if (!sw || !activeEl) return;
+  const bg = sw.dataset.bg;
+  if (bg === 'transparent') {
+    activeEl.style.backgroundColor = '';
+    activeEl.style.padding = '';
+    activeEl.style.borderRadius = '';
+  } else {
+    activeEl.style.backgroundColor = bg;
+    activeEl.style.padding = '4px 10px';
+    activeEl.style.borderRadius = '5px';
+  }
+  D.bgColSwatches.querySelectorAll('[data-bg]').forEach(s => s.classList.remove('active'));
+  sw.classList.add('active');
+  Hist.push();
+});
+
+// Shadow toggle
+D.shadowSw.addEventListener('click', () => {
+  if (!activeEl) return;
+  const on = !D.shadowSw.classList.contains('on');
+  D.shadowSw.classList.toggle('on', on);
+  D.shadowIntWrap.classList.toggle('show', on);
+  applyShadow(on);
+  Hist.push();
+});
+D.shadowIntSl.addEventListener('input', () => {
+  if (!activeEl || !D.shadowSw.classList.contains('on')) return;
+  applyShadow(true);
+  D.shadowIntVal.textContent = D.shadowIntSl.value;
+  Hist.pushLazy(300);
+});
+function applyShadow(on) {
+  if (!activeEl) return;
+  const v = D.shadowIntSl.value;
+  activeEl.style.textShadow = on
+    ? `1px 1px ${v}px rgba(0,0,0,0.65), 0 0 ${Math.round(v*1.5)}px rgba(0,0,0,0.3)`
+    : 'none';
+}
+
+// ─── POSITION CONTROLS ───────────────────────────────────────────
+function posInputHandler(isLogo) {
+  if (!activeEl || suppressSync) return;
+  const xInput = isLogo ? D.logoPosX : D.posX;
+  const yInput = isLogo ? D.logoPosY : D.posY;
+  const x = parseFloat(xInput.value);
+  const y = parseFloat(yInput.value);
+  if (!isNaN(x) && !isNaN(y)) {
+    setElPos(activeEl, x, y);
+    Hist.pushLazy(400);
+  }
+}
+
+D.posX.addEventListener('input', () => posInputHandler(false));
+D.posY.addEventListener('input', () => posInputHandler(false));
+D.logoPosX.addEventListener('input', () => posInputHandler(true));
+D.logoPosY.addEventListener('input', () => posInputHandler(true));
+
+// Center buttons - text
+D.ctrH.addEventListener('click', () => { if (activeEl) { centerH(activeEl); syncTextPanel(); Hist.push(); }});
+D.ctrV.addEventListener('click', () => { if (activeEl) { centerV(activeEl); syncTextPanel(); Hist.push(); }});
+D.ctrBoth.addEventListener('click', () => { if (activeEl) { centerBoth(activeEl); syncTextPanel(); Hist.push(); }});
+
+// Center buttons - logo
+D.logoCtrH.addEventListener('click', () => { if (activeEl) { centerH(activeEl); syncLogoPanel(); Hist.push(); }});
+D.logoCtrV.addEventListener('click', () => { if (activeEl) { centerV(activeEl); syncLogoPanel(); Hist.push(); }});
+D.logoCtrBoth.addEventListener('click', () => { if (activeEl) { centerBoth(activeEl); syncLogoPanel(); Hist.push(); }});
+
+// ─── LOCK ─────────────────────────────────────────────────────────
+function toggleLock(el, lockBtn, lockIco) {
+  locks[el.id] = !locks[el.id];
+  const locked = locks[el.id];
+  lockBtn.classList.toggle('locked', locked);
+  lockIco.className = locked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
+  el.classList.toggle('locked-el', locked);
+  toast(locked ? 'wrn' : 'ok',
+    locked ? 'تم قفل الموضع' : 'تم فتح الموضع',
+    locked ? `لن يتحرك عنصر "${el.dataset.name}" عند السحب` : `يمكنك تحريك "${el.dataset.name}" الآن`
+  );
+}
+D.lockBtn.addEventListener('click', () => { if (activeEl) toggleLock(activeEl, D.lockBtn, D.lockIco); });
+D.logoLockBtn.addEventListener('click', () => { if (activeEl) toggleLock(activeEl, D.logoLockBtn, D.logoLockIco); });
+
+// ─── LOGO CONTROLS ───────────────────────────────────────────────
+D.logoSzSl.addEventListener('input', () => {
+  if (!activeEl) return;
+  activeEl.style.width = D.logoSzSl.value + 'px';
+  D.logoSzVal.textContent = D.logoSzSl.value + 'px';
+  Hist.pushLazy(300);
+});
+D.logoOpSl.addEventListener('input', () => {
+  if (!activeEl) return;
+  activeEl.style.opacity = D.logoOpSl.value / 100;
+  D.logoOpVal.textContent = D.logoOpSl.value + '%';
+  Hist.pushLazy(300);
+});
+D.removeLogoBtn.addEventListener('click', () => {
+  D.logo.src = ''; D.logo.style.display = 'none';
+  delete locks[D.logo.id];
+  selectEl(null);
+  Hist.push();
+});
+
+// ─── FILE UPLOADS ────────────────────────────────────────────────
+$('bgUpload').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    D.bgImg.src = ev.target.result;
+    $$('.tpl').forEach(t => t.classList.remove('active'));
+    Hist.push();
+  };
+  reader.readAsDataURL(file);
+});
+
+$('logoUpload').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    D.logo.src = ev.target.result;
+    D.logo.style.display = 'block';
+    D.logo.style.right = '5%'; D.logo.style.left = 'auto';
+    D.logo.style.width = '90px'; D.logo.style.opacity = '1';
+    D.logo.style.top = '5%';
+    selectEl(D.logo);
+    Hist.push();
+  };
+  reader.readAsDataURL(file);
+});
+
+// ─── DRAGGING ────────────────────────────────────────────────────
+$$('.selectable').forEach(el => {
+  let drag = false, sx, sy, ex, ey, moved = false;
+  const ptr = e => e.touches ? e.touches[0] : e;
+
+  const start = e => {
+    if (isLocked(el)) return;
+    e.preventDefault();
+    selectEl(el);
+    drag = true; moved = false;
+    if (el.id === 'logoPreview') el.style.right = 'auto';
+    const p = ptr(e);
+    sx = p.clientX; sy = p.clientY;
+    ex = el.offsetLeft; ey = el.offsetTop;
+    document.addEventListener('mousemove', move);
+    document.addEventListener('touchmove', move, {passive:false});
+    document.addEventListener('mouseup', end);
+    document.addEventListener('touchend', end);
+  };
+
+  const move = e => {
+    if (!drag) return;
+    e.preventDefault();
+    const p = ptr(e);
+    const dx = p.clientX - sx, dy = p.clientY - sy;
+    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
+    el.style.left = (ex + dx) + 'px';
+    el.style.top  = (ey + dy) + 'px';
+    el.style.transform = '';
+    // Live-update position inputs
+    if (!suppressSync && activeEl === el) {
+      const pos = getElPos(el);
+      if (el.id === 'logoPreview') { D.logoPosX.value = pos.x; D.logoPosY.value = pos.y; }
+      else { D.posX.value = pos.x; D.posY.value = pos.y; }
+    }
+  };
+
+  const end = () => {
+    if (drag && moved) Hist.push();
+    drag = false; moved = false;
+    document.removeEventListener('mousemove', move);
+    document.removeEventListener('touchmove', move);
+    document.removeEventListener('mouseup', end);
+    document.removeEventListener('touchend', end);
+  };
+
+  el.addEventListener('mousedown', start);
+  el.addEventListener('touchstart', start, {passive:false});
+});
+
+// ─── ORIENTATION ─────────────────────────────────────────────────
+function setOrientation(o, saveHist = true) {
+  orientation = o;
+  const isLs = o === 'landscape';
+  D.canvas.classList.toggle('portrait', !isLs);
+  D.canvasWrap.classList.toggle('portrait-mode', !isLs);
+  D.btnLandscape.classList.toggle('active', isLs);
+  D.btnPortrait.classList.toggle('active', !isLs);
+  D.lsTpls.style.display = isLs ? 'grid' : 'none';
+  D.ptTpls.style.display = isLs ? 'none' : 'grid';
+  D.tplLabel.textContent = isLs ? 'قوالب عرضية' : 'قوالب طولية';
+
+  const cont = isLs ? D.lsTpls : D.ptTpls;
+  if (!cont.querySelector('.tpl.active')) {
+    const t = isLs ? TEMPLATES.landscape[0] : TEMPLATES.portrait[0];
+    applyTemplate(t.url, t.id, false);
+  }
+  if (saveHist) Hist.push();
+}
+D.btnLandscape.addEventListener('click', () => setOrientation('landscape'));
+D.btnPortrait.addEventListener('click', () => setOrientation('portrait'));
+
+// ─── TEMPLATES ───────────────────────────────────────────────────
+function applyTemplate(url, id, saveHist = true) {
+  D.bgImg.src = url;
+  $$('.tpl').forEach(t => t.classList.remove('active'));
+  const target = document.querySelector(`[data-tid="${id}"]`);
+  if (target) target.classList.add('active');
+  if (saveHist) Hist.push();
+}
+
+function renderTemplates() {
+  ['landscape','portrait'].forEach(type => {
+    const cont = type === 'landscape' ? D.lsTpls : D.ptTpls;
+    cont.innerHTML = '';
+    TEMPLATES[type].forEach(t => {
+      const img = document.createElement('img');
+      img.src = t.url; img.dataset.tid = t.id;
+      img.className = `tpl ${type==='landscape'?'ls':'pt'}`;
+      img.addEventListener('click', () => applyTemplate(t.url, t.id));
+      cont.appendChild(img);
+    });
+  });
+  applyTemplate(TEMPLATES.landscape[0].url, TEMPLATES.landscape[0].id, false);
+}
+
+// ─── MODE SWITCH ─────────────────────────────────────────────────
+D.btnSingle.addEventListener('click', () => {
+  D.singlePanel.style.display='block'; D.batchPanel.style.display='none';
+  D.btnSingle.classList.add('active'); D.btnBatch.classList.remove('active');
+});
+D.btnBatch.addEventListener('click', () => {
+  D.singlePanel.style.display='none'; D.batchPanel.style.display='block';
+  D.btnBatch.classList.add('active'); D.btnSingle.classList.remove('active');
+});
+
+// ─── EXPORT ──────────────────────────────────────────────────────
+async function doExport(fn, msg='جاري التصدير...') {
+  selectEl(null);
+  await new Promise(r => setTimeout(r, 70));
+  showLoading(msg);
+  const origR = D.canvas.style.borderRadius;
+  D.canvas.style.borderRadius = '0';
+  D.bgImg.style.borderRadius = '0';
+  try {
+    await fn();
+    toast('ok', 'تم التصدير', 'تم حفظ الملف بنجاح.');
+  } catch (err) {
+    console.error(err);
+    toast('err', 'خطأ في التصدير', 'حدث خطأ، حاول مرة أخرى.');
+  } finally {
+    hideLoading();
+    D.canvas.style.borderRadius = origR;
+    D.bgImg.style.borderRadius = '';
+  }
+}
+
+D.btnPng.addEventListener('click', () => doExport(async () => {
+  const cv = await html2canvas(D.canvas, {scale:3,useCORS:true,backgroundColor:null,allowTaint:true});
+  const a = document.createElement('a');
+  a.download = `coupon-${Date.now()}.png`; a.href = cv.toDataURL('image/png'); a.click();
+}));
+
+D.btnPdf.addEventListener('click', () => doExport(async () => {
+  const {jsPDF} = window.jspdf;
+  const isP = D.canvas.classList.contains('portrait');
+  const w = D.canvas.offsetWidth, h = D.canvas.offsetHeight;
+  const pdf = new jsPDF({orientation:isP?'p':'l',unit:'px',format:[w,h]});
+  const cv = await html2canvas(D.canvas, {scale:2,useCORS:true,backgroundColor:null,allowTaint:true});
+  pdf.addImage(cv.toDataURL('image/png'),'PNG',0,0,w,h);
+  pdf.save(`coupon-${Date.now()}.pdf`);
+}));
+
+// ─── BATCH ───────────────────────────────────────────────────────
+D.batchFile.addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const wb = XLSX.read(new Uint8Array(ev.target.result), {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1});
+      if (!rows.length) { toast('err','الملف فارغ','لا توجد بيانات في الملف'); return; }
+
+      // ─ ابحث عن العمود الذي يحمل رأس "كود / code / coupon…"
+      const KEYWORDS = ['كود','code','coupon','كوبون','الكود','voucher','promo'];
+      const headerRow = rows[0].map(h => String(h ?? '').trim().toLowerCase());
+      let colIdx = headerRow.findIndex(h => KEYWORDS.some(kw => h.includes(kw)));
+
+      let dataRows, detectedHeader;
+      if (colIdx !== -1) {
+        // رأس جدول موجود → تخطّ السطر الأول وخذ العمود المكتشف
+        detectedHeader = rows[0][colIdx];
+        dataRows = rows.slice(1);
+      } else {
+        // لا يوجد رأس مطابق → اقرأ العمود الأول كاملاً بدون حذف
+        colIdx = 0;
+        detectedHeader = null;
+        dataRows = rows;
+      }
+
+      couponCodes = dataRows
+        .map(r => r[colIdx])
+        .filter(c => c != null && String(c).trim() !== '')
+        .map(c => String(c).trim());
+
+      if (couponCodes.length) {
+        D.batchFName.textContent = file.name;
+        D.dropZone.classList.add('has-file');
+        D.batchBadgeWrap.style.display = 'block';
+        D.batchBadge.textContent = `${couponCodes.length} كود جاهز`;
+        $('codeText').textContent = couponCodes[0];
+        const src = detectedHeader ? `من عمود "${detectedHeader}"` : 'من العمود الأول';
+        toast('ok', 'تم التحميل', `${couponCodes.length} كود ${src}`);
+      } else {
+        toast('err','لا توجد أكواد','لم يُعثر على قيم صالحة في العمود المكتشف');
+      }
+    } catch(err) {
+      console.error(err);
+      toast('err','خطأ في الملف','تعذّر قراءة الملف، تأكد من الصيغة (.xlsx أو .csv)');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+D.btnGenBatch.addEventListener('click', () => {
+  if (!couponCodes.length) { toast('wrn','لا توجد أكواد','ارفع ملف الأكواد أولاً'); return; }
+  doExport(async () => {
+    const {jsPDF} = window.jspdf;
+    const isP = D.canvas.classList.contains('portrait');
+    const w = D.canvas.offsetWidth, h = D.canvas.offsetHeight;
+    const pdf = new jsPDF({orientation:isP?'p':'l',unit:'px',format:[w,h]});
+    const codeEl = $('codeText'), orig = codeEl.textContent;
+    for (let i=0; i<couponCodes.length; i++) {
+      codeEl.textContent = couponCodes[i];
+      await new Promise(r=>setTimeout(r,40));
+      const cv = await html2canvas(D.canvas,{scale:2,useCORS:true,backgroundColor:null,allowTaint:true});
+      if (i>0) pdf.addPage([w,h],isP?'p':'l');
+      pdf.addImage(cv.toDataURL('image/png'),'PNG',0,0,w,h);
+    }
+    pdf.save(`coupons-batch-${Date.now()}.pdf`);
+    codeEl.textContent = orig;
+  }, `جاري إنشاء ${couponCodes.length} كوبون...`);
+});
+
+// ─── SAVED TEMPLATES ─────────────────────────────────────────────
+function saveTemplate() {
+  const name = prompt('اسم القالب:', 'قالب جديد');
+  if (!name || !name.trim()) return;
+  const data = {
+    id: `t${Date.now()}`, name: name.trim(), orientation,
+    background: D.bgImg.src, texts: {}, logo: null,
+  };
+  $$('.movable:not(img)').forEach(el => {
+    const cs = window.getComputedStyle(el);
+    data.texts[el.id] = {
+      html: el.innerHTML, top: el.style.top, left: el.style.left,
+      transform: el.style.transform,
+      fontSize: cs.fontSize, color: cs.color, fontWeight: cs.fontWeight,
+      textAlign: cs.textAlign, letterSpacing: cs.letterSpacing,
+      lineHeight: cs.lineHeight, textShadow: cs.textShadow,
+      backgroundColor: cs.backgroundColor, padding: el.style.padding,
+      borderRadius: el.style.borderRadius,
+    };
+  });
+  if (D.logo.src && D.logo.style.display !== 'none') {
+    data.logo = {src:D.logo.src,top:D.logo.style.top,left:D.logo.style.left,
+      right:D.logo.style.right,width:D.logo.style.width,opacity:D.logo.style.opacity};
+  }
+  const saved = JSON.parse(localStorage.getItem('coupons_tpl') || '[]');
+  saved.push(data);
+  localStorage.setItem('coupons_tpl', JSON.stringify(saved));
+  loadSavedTemplates();
+  toast('ok','تم الحفظ',`قالب "${data.name}" محفوظ`);
+}
+
+function applyTemplateData(data) {
+  setOrientation(data.orientation, false);
+  D.bgImg.src = data.background;
+  $$('.tpl').forEach(t=>t.classList.remove('active'));
+  Object.entries(data.texts).forEach(([id,t]) => {
+    const el = $(id); if (!el) return;
+    el.innerHTML=t.html; el.style.top=t.top; el.style.left=t.left;
+    el.style.transform=t.transform; el.style.fontSize=t.fontSize;
+    el.style.color=t.color; el.style.fontWeight=t.fontWeight;
+    el.style.textAlign=t.textAlign; el.style.letterSpacing=t.letterSpacing;
+    el.style.lineHeight=t.lineHeight; el.style.textShadow=t.textShadow;
+    el.style.backgroundColor=t.backgroundColor; el.style.padding=t.padding;
+    el.style.borderRadius=t.borderRadius;
+  });
+  if (data.logo) {
+    D.logo.src=data.logo.src; D.logo.style.display='block';
+    D.logo.style.top=data.logo.top; D.logo.style.left=data.logo.left;
+    D.logo.style.right=data.logo.right; D.logo.style.width=data.logo.width;
+    D.logo.style.opacity=data.logo.opacity||'1';
+  } else { D.logo.src=''; D.logo.style.display='none'; }
+  Hist.push();
+  toast('ok','تم التطبيق',`قالب "${data.name}" جاهز`);
+}
+
+function loadSavedTemplates() {
+  const saved = JSON.parse(localStorage.getItem('coupons_tpl') || '[]');
+  D.savedGrid.innerHTML = '';
+  if (!saved.length) { D.savedGrid.innerHTML='<p class="empty-st">لا توجد قوالب محفوظة.</p>'; return; }
+  saved.forEach(tpl => {
+    const wrap = document.createElement('div'); wrap.className='stpl-wrap';
+    const img = document.createElement('img');
+    img.src=tpl.background; img.className=`tpl ${tpl.orientation==='landscape'?'ls':'pt'}`;
+    img.title=tpl.name; img.addEventListener('click',()=>applyTemplateData(tpl));
+    const nm = document.createElement('p'); nm.className='stpl-name'; nm.textContent=tpl.name;
+    const del = document.createElement('button'); del.className='stpl-del';
+    del.innerHTML='<i class="fa-solid fa-xmark"></i>';
+    del.addEventListener('click', e => {
+      e.stopPropagation();
+      if (confirm(`حذف قالب "${tpl.name}"؟`)) {
+        const s = JSON.parse(localStorage.getItem('coupons_tpl')||'[]').filter(t=>t.id!==tpl.id);
+        localStorage.setItem('coupons_tpl',JSON.stringify(s));
+        loadSavedTemplates();
+      }
+    });
+    wrap.appendChild(del); wrap.appendChild(img); wrap.appendChild(nm);
+    D.savedGrid.appendChild(wrap);
+  });
+}
+
+D.btnSave.addEventListener('click', saveTemplate);
+
+// ─── INIT ────────────────────────────────────────────────────────
+renderTemplates();
+loadSavedTemplates();
+setOrientation('landscape', false);
+selectEl(null);
+// Save initial state
+setTimeout(() => Hist.push(), 200);
+
+})();
+</script>
 </body>
 </html>

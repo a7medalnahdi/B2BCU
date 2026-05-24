@@ -1,209 +1,394 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>لوحة التحكم الرئيسية - SWEATER</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <style>
-        :root {
-            --primary-color: #f96714;
-            --primary-color-dark: #e05a12;
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-color: #1a1a1a;
-            --sub-text-color: #6b7280;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --main-font: 'Cairo', sans-serif;
-            --border-radius: 16px;
-        }
-        body {
-            font-family: var(--main-font);
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
-        }
-        .top-bar {
-            background-color: var(--card-bg);
-            padding: 1rem 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .top-bar img { height: 50px; }
-        .container {
-            padding: 3rem 1rem;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .title-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-        .title-header h1 {
-            font-weight: 800;
-            font-size: 2.8rem;
-            color: var(--text-color);
-            margin: 0;
-            position: relative;
-            display: inline-block;
-        }
-        .title-header h1::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -10px;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 5px;
-            background-color: var(--primary-color);
-            border-radius: 5px;
-        }
-        .title-header p {
-            font-size: 1.2rem;
-            color: var(--sub-text-color);
-            margin-top: 1.5rem;
-        }
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-        .tool-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #e5e7eb;
-        }
-        .tool-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: var(--primary-color);
-        }
-        .tool-card-image {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
-            border-top-left-radius: var(--border-radius);
-            border-top-right-radius: var(--border-radius);
-        }
-        .tool-card-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-        }
-        .tool-card-content h2 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-color);
-        }
-        .tool-card-content p {
-            margin: 0;
-            color: var(--sub-text-color);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        .tool-card-footer {
-            padding: 1.2rem 1.5rem;
-            background-color: #f9fafb;
-            border-top: 1px solid #e5e7eb;
-            text-align: right;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-         .tool-card-footer span {
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        .tool-card-footer i {
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-        .tool-card:hover .tool-card-footer i {
-            transform: translateX(5px);
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>لوحة الأدوات — SWEATER</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<style>
+/* ===== FONTS ===== */
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Regular.woff2')format('woff2');font-weight:400}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Medium.woff2')format('woff2');font-weight:500}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-SemiBold.woff2')format('woff2');font-weight:600}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Bold.woff2')format('woff2');font-weight:700}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-ExtraBold.woff2')format('woff2');font-weight:800}
+@font-face{font-family:'LamaSans';src:url('fonts/LamaSans-Black.woff2')format('woff2');font-weight:900}
+
+/* ===== TOKENS ===== */
+:root{
+  --accent:#f96714;
+  --accent-d:#e05a0e;
+  --accent-l:rgba(249,103,20,.1);
+  --bg:#f0f2f8;
+  --surf:#ffffff;
+  --surf2:#f5f7fc;
+  --bdr:#e3e7f0;
+  --t1:#111827;
+  --t2:#6b7280;
+  --t3:#9ca3af;
+  --sh1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh2:0 6px 20px rgba(0,0,0,.07),0 2px 6px rgba(0,0,0,.04);
+  --sh3:0 20px 40px rgba(0,0,0,.1),0 6px 14px rgba(0,0,0,.06);
+  --f:'LamaSans','Cairo',sans-serif;
+  --tr:.22s ease;
+  --r:14px;
+  --r2:20px;
+
+  /* tool accent colours */
+  --c1:#7c3aed; /* إطارات    – بنفسجي */
+  --c2:#f96714; /* كوبونات  – برتقالي */
+  --c3:#0ea5e9; /* أسعار    – أزرق    */
+  --c4:#10b981; /* تصميم    – أخضر    */
+  --c5:#e11d48; /* شراكات   – أحمر وردي */
+}
+body.dark{
+  --bg:#0c1018;--surf:#151c28;--surf2:#1a2235;--bdr:#253045;
+  --t1:#e8ecf5;--t2:#8b95a8;--t3:#5a6478;
+  --sh1:0 1px 3px rgba(0,0,0,.4);--sh2:0 6px 20px rgba(0,0,0,.4);--sh3:0 20px 40px rgba(0,0,0,.5);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);min-height:100vh;
+  -webkit-font-smoothing:antialiased;transition:background var(--tr),color var(--tr)}
+
+/* ===== HEADER ===== */
+header{
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  position:sticky;top:0;z-index:100;box-shadow:var(--sh1)
+}
+.hdr-inner{
+  max-width:1180px;margin:0 auto;padding:0 24px;
+  height:64px;display:flex;align-items:center;justify-content:space-between
+}
+.hdr-logo img{height:36px;display:block}
+.hdr-actions{display:flex;align-items:center;gap:10px}
+.theme-btn{
+  width:38px;height:38px;border-radius:10px;border:1px solid var(--bdr);
+  background:var(--surf2);color:var(--t2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  transition:all var(--tr)
+}
+.theme-btn:hover{background:var(--bdr);color:var(--t1)}
+.tool-count-badge{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:100px;
+  background:var(--accent-l);color:var(--accent);
+  font-size:.78rem;font-weight:700
+}
+
+/* ===== HERO ===== */
+.hero{
+  max-width:1180px;margin:0 auto;padding:56px 24px 44px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px
+}
+.hero-text{}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 12px;border-radius:100px;
+  background:var(--accent-l);color:var(--accent);
+  font-size:.78rem;font-weight:700;margin-bottom:14px
+}
+.hero-eyebrow span{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+.hero h1{
+  font-size:2.6rem;font-weight:900;color:var(--t1);
+  line-height:1.15;margin-bottom:12px
+}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:1rem;color:var(--t2);font-weight:500;line-height:1.7;max-width:500px}
+.hero-stat{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r2);
+  padding:20px 32px;box-shadow:var(--sh1);text-align:center;flex-shrink:0
+}
+.hero-stat-num{font-size:2.8rem;font-weight:900;color:var(--accent);line-height:1}
+.hero-stat-lbl{font-size:.82rem;font-weight:600;color:var(--t2);margin-top:6px}
+
+/* ===== DIVIDER ===== */
+.divider{max-width:1180px;margin:0 auto;padding:0 24px}
+.divider-line{height:1px;background:var(--bdr)}
+
+/* ===== GRID ===== */
+.grid-wrap{max-width:1180px;margin:0 auto;padding:36px 24px 72px}
+.grid-label{
+  font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:20px
+}
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px
+}
+
+/* ===== CARD ===== */
+.card{
+  background:var(--surf);border-radius:var(--r2);border:1px solid var(--bdr);
+  box-shadow:var(--sh2);overflow:hidden;text-decoration:none;color:var(--t1);
+  display:flex;flex-direction:column;
+  transition:transform var(--tr),box-shadow var(--tr),border-color var(--tr);
+  position:relative
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--sh3);
+  border-color:var(--card-accent,var(--accent))
+}
+
+/* Accent top bar */
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--card-accent,var(--accent));
+  border-radius:var(--r2) var(--r2) 0 0;
+  transform:scaleX(0);transform-origin:right;
+  transition:transform .3s ease
+}
+.card:hover::before{transform:scaleX(1)}
+
+/* Image */
+.card-img{
+  height:160px;background-size:cover;background-position:center;
+  position:relative;overflow:hidden
+}
+.card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 55%)
+}
+.card-img-badge{
+  position:absolute;bottom:12px;right:12px;z-index:1;
+  width:40px;height:40px;border-radius:12px;
+  background:var(--card-accent,var(--accent));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1rem;box-shadow:0 4px 10px rgba(0,0,0,.25)
+}
+
+/* Content */
+.card-body{padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;gap:8px}
+.card-title{font-size:1.05rem;font-weight:800;color:var(--t1);line-height:1.3}
+.card-desc{font-size:.83rem;color:var(--t2);line-height:1.65;flex:1}
+
+/* Tags */
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tag{
+  padding:3px 9px;border-radius:100px;font-size:.7rem;font-weight:700;
+  background:var(--surf2);color:var(--t3);border:1px solid var(--bdr)
+}
+
+/* Footer */
+.card-foot{
+  padding:12px 18px;border-top:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2)
+}
+.card-foot-txt{font-size:.8rem;font-weight:700;color:var(--card-accent,var(--accent))}
+.card-foot-arrow{
+  width:30px;height:30px;border-radius:8px;
+  background:var(--card-accent,var(--accent));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  transition:transform var(--tr)
+}
+.card:hover .card-foot-arrow{transform:translateX(-4px)}
+
+/* Wide card (span 2) */
+.card-wide{grid-column:span 2}
+
+/* ===== FOOTER ===== */
+footer{
+  background:var(--surf);border-top:1px solid var(--bdr);
+  padding:22px 24px
+}
+.foot-inner{
+  max-width:1180px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:16px
+}
+.foot-logo img{height:28px;opacity:.7}
+.foot-copy{font-size:.78rem;color:var(--t3);font-weight:500}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .tools-grid{grid-template-columns:repeat(2,1fr)}
+  .card-wide{grid-column:span 1}
+  .hero{flex-direction:column;align-items:flex-start;gap:20px}
+  .hero-stat{flex-direction:row;gap:16px;padding:16px 24px;width:100%}
+}
+@media(max-width:580px){
+  .tools-grid{grid-template-columns:1fr}
+  .hero h1{font-size:1.9rem}
+}
+</style>
 </head>
 <body>
-    <div class="top-bar">
-        <img src="https://i.ibb.co/qLNFj53h/Logo-2.png" alt="شعار الشركة">
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="hdr-inner">
+    <div class="hdr-logo">
+      <img src="https://i.ibb.co/qLNFj53h/Logo-2.png" alt="SWEATER"/>
     </div>
-    <div class="container">
-        <div class="title-header">
-            <h1>لوحة التحكم</h1>
-            <p>اختر الأداة التي ترغب في استخدامها</p>
-        </div>
-        <div class="tools-grid">
-            <a href="./framing-tool.html" class="tool-card">
-                <div class="tool-card-image" style="background-image: url('https://i.ibb.co/FbHvLZwd/444.png');"></div>
-                <div class="tool-card-content">
-                    <h2>أداة تركيب الإطارات</h2>
-                    <p>لرفع الصور وإضافة إطار من اختيارك عليها، مع إمكانية تصدير صورة واحدة أو مجموعة صور دفعة واحدة.</p>
-                </div>
-                <div class="tool-card-footer">
-                    <span>الانتقال إلى الأداة</span>
-                    <i class="fa-solid fa-arrow-left"></i>
-                </div>
-            </a>
-            <a href="./coupon-tool.html" class="tool-card">
-                <div class="tool-card-image" style="background-image: url('https://i.ibb.co/jPLhFFf5/333.png');"></div>
-                <div class="tool-card-content">
-                    <h2>أداة تصدير الكوبونات</h2>
-                    <p>لتصميم كوبونات الخصم بشكل احترافي، وتعديل النصوص، وتصديرها كصور أو ملفات PDF فردية أو جماعية.</p>
-                </div>
-                 <div class="tool-card-footer">
-                    <span>الانتقال إلى الأداة</span>
-                    <i class="fa-solid fa-arrow-left"></i>
-                </div>
-            </a>
-            <a href="./Quotation Generator.html" class="tool-card">
-                <div class="tool-card-image" style="background-image: url('https://i.ibb.co/k20tnLpN/112.png');"></div>
-                <div class="tool-card-content">
-                    <h2>مولد عروض الأسعار</h2>
-                    <p>لإنشاء عروض أسعار احترافية وتعديلها وحفظها وتصديرها كملفات PDF.</p>
-                </div>
-                 <div class="tool-card-footer">
-                    <span>الانتقال إلى الأداة</span>
-                    <i class="fa-solid fa-arrow-left"></i>
-                </div>
-            </a>
-            <a href="./n_icons.html" class="tool-card">
-                <div class="tool-card-image" style="background-image: url('https://i.ibb.co/F4J0bMRW/image.png');"></div>
-                <div class="tool-card-content">
-                    <h2>أداة تصميم</h2>
-                    <p>استوديو تصميم متعدد الإمكانات لإنشاء تصاميم احترافية باستخدام النصوص، الصور، والأشكال المتنوعة، مع خيارات حفظ وتصدير متعددة.</p>
-                </div>
-                <div class="tool-card-footer">
-                    <span>الانتقال إلى الأداة</span>
-                    <i class="fa-solid fa-arrow-left"></i>
-                </div>
-            </a>
-            <a href="./logo-framer-tool.html" class="tool-card">
-                <div class="tool-card-image" style="background-image: url('https://i.ibb.co/nMRr1xgn/image.png');"></div>
-                <div class="tool-card-content">
-                    <h2>قوالب الشراكات</h2>
-                    <p>أداة مخصصة لتركيب الشعارات على قوالب شراكات جاهزة وتصديرها بسهولة بأعلى جودة.</p>
-                </div>
-                <div class="tool-card-footer">
-                    <span>الانتقال إلى الأداة</span>
-                    <i class="fa-solid fa-arrow-left"></i>
-                </div>
-            </a>
-        </div>
+    <div class="hdr-actions">
+      <div class="tool-count-badge">
+        <i class="fa-solid fa-grid-2"></i>
+        5 أدوات
+      </div>
+      <button class="theme-btn" id="themeBtn" title="الوضع المظلم">
+        <i class="fa-solid fa-moon" id="themeIco"></i>
+      </button>
     </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">
+      <span></span>
+      لوحة الأدوات الداخلية
+    </div>
+    <h1>أدواتك في<br>مكان <em>واحد</em></h1>
+    <p>مجموعة أدوات مبنية خصيصاً لفريق SWEATER لتسريع العمل اليومي وإنجاز المهام بأعلى جودة.</p>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-num">5</div>
+    <div class="hero-stat-lbl">أداة جاهزة للاستخدام</div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ===== TOOLS GRID ===== -->
+<div class="grid-wrap">
+  <div class="grid-label">الأدوات المتاحة</div>
+  <div class="tools-grid">
+
+    <!-- 1. إطارات -->
+    <a href="./framing-tool.html" class="card" style="--card-accent:var(--c1)">
+      <div class="card-img" style="background-image:url('https://i.ibb.co/FbHvLZwd/444.png')">
+        <div class="card-img-badge"><i class="fa-solid fa-images"></i></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">أداة تركيب الإطارات</div>
+        <div class="card-desc">ارفع صورك وأضف إطاراً من اختيارك، مع دعم التصدير الفردي أو الجماعي دفعةً واحدة.</div>
+        <div class="card-tags">
+          <span class="tag">PNG</span>
+          <span class="tag">تصدير جماعي</span>
+          <span class="tag">إطارات</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="card-foot-txt">فتح الأداة</span>
+        <div class="card-foot-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+      </div>
+    </a>
+
+    <!-- 2. كوبونات (wide) -->
+    <a href="./coupon-tool.html" class="card card-wide" style="--card-accent:var(--c2)">
+      <div class="card-img" style="background-image:url('https://i.ibb.co/jPLhFFf5/333.png');height:180px">
+        <div class="card-img-badge"><i class="fa-solid fa-ticket"></i></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">أداة تصدير الكوبونات</div>
+        <div class="card-desc">صمّم كوبونات الخصم بشكل احترافي، عدّل النصوص وحركها، واستورد ملف Excel لإنتاج مئات الكوبونات دفعة واحدة.</div>
+        <div class="card-tags">
+          <span class="tag">PDF</span>
+          <span class="tag">PNG</span>
+          <span class="tag">Excel</span>
+          <span class="tag">تصدير جماعي</span>
+          <span class="tag">A6</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="card-foot-txt">فتح الأداة</span>
+        <div class="card-foot-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+      </div>
+    </a>
+
+    <!-- 3. عروض الأسعار -->
+    <a href="./Quotation Generator.html" class="card" style="--card-accent:var(--c3)">
+      <div class="card-img" style="background-image:url('https://i.ibb.co/k20tnLpN/112.png')">
+        <div class="card-img-badge"><i class="fa-solid fa-file-invoice"></i></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">مولّد عروض الأسعار</div>
+        <div class="card-desc">أنشئ عروض أسعار احترافية، عدّلها، احفظها، وصدّرها كملفات PDF جاهزة للإرسال.</div>
+        <div class="card-tags">
+          <span class="tag">PDF</span>
+          <span class="tag">حفظ تلقائي</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="card-foot-txt">فتح الأداة</span>
+        <div class="card-foot-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+      </div>
+    </a>
+
+    <!-- 4. تصميم -->
+    <a href="./n_icons.html" class="card" style="--card-accent:var(--c4)">
+      <div class="card-img" style="background-image:url('https://i.ibb.co/F4J0bMRW/image.png')">
+        <div class="card-img-badge"><i class="fa-solid fa-pen-nib"></i></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">أداة التصميم</div>
+        <div class="card-desc">استوديو تصميم متعدد الإمكانات لإنشاء تصاميم احترافية بالنصوص والصور والأشكال.</div>
+        <div class="card-tags">
+          <span class="tag">PNG</span>
+          <span class="tag">SVG</span>
+          <span class="tag">طبقات</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="card-foot-txt">فتح الأداة</span>
+        <div class="card-foot-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+      </div>
+    </a>
+
+    <!-- 5. شراكات -->
+    <a href="./logo-framer-tool.html" class="card" style="--card-accent:var(--c5)">
+      <div class="card-img" style="background-image:url('https://i.ibb.co/nMRr1xgn/image.png')">
+        <div class="card-img-badge"><i class="fa-solid fa-handshake"></i></div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">قوالب الشراكات</div>
+        <div class="card-desc">ركّب شعارات الشركاء على قوالب الشراكة الجاهزة وصدّرها بأعلى جودة.</div>
+        <div class="card-tags">
+          <span class="tag">PNG</span>
+          <span class="tag">شعارات</span>
+          <span class="tag">قوالب</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span class="card-foot-txt">فتح الأداة</span>
+        <div class="card-foot-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-logo">
+      <img src="https://i.ibb.co/qLNFj53h/Logo-2.png" alt="SWEATER"/>
+    </div>
+    <div class="foot-copy">© 2025 SWEATER — لوحة الأدوات الداخلية</div>
+  </div>
+</footer>
+
+<script>
+const btn = document.getElementById('themeBtn');
+const ico = document.getElementById('themeIco');
+btn.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  ico.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  localStorage.setItem('swDark', isDark ? '1' : '');
+});
+if (localStorage.getItem('swDark')) {
+  document.body.classList.add('dark');
+  ico.className = 'fa-solid fa-sun';
+}
+</script>
+
 </body>
 </html>
